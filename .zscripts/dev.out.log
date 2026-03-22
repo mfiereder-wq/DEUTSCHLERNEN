@@ -1,0 +1,541 @@
+==========================================
+[2026-03-17 21:09:45] Starting: bun install
+==========================================
+[BUN] Installing dependencies...
+[0.43ms] ".env"
+bun install v1.3.10 (30e609e0)
+
++ @tailwindcss/postcss@4.1.18
++ @types/react@19.2.8
++ @types/react-dom@19.2.3
++ bun-types@1.3.6
++ eslint@9.39.2
++ eslint-config-next@16.1.3
++ tailwindcss@4.1.18
++ tw-animate-css@1.4.0
++ typescript@5.9.3
++ @dnd-kit/core@6.3.1
++ @dnd-kit/sortable@10.0.0
++ @dnd-kit/utilities@3.2.2
++ @hookform/resolvers@5.2.2
++ @mdxeditor/editor@3.52.3
++ @prisma/client@6.19.2
++ @radix-ui/react-accordion@1.2.12
++ @radix-ui/react-alert-dialog@1.1.15
++ @radix-ui/react-aspect-ratio@1.1.8
++ @radix-ui/react-avatar@1.1.11
++ @radix-ui/react-checkbox@1.3.3
++ @radix-ui/react-collapsible@1.1.12
++ @radix-ui/react-context-menu@2.2.16
++ @radix-ui/react-dialog@1.1.15
++ @radix-ui/react-dropdown-menu@2.1.16
++ @radix-ui/react-hover-card@1.1.15
++ @radix-ui/react-label@2.1.8
++ @radix-ui/react-menubar@1.1.16
++ @radix-ui/react-navigation-menu@1.2.14
++ @radix-ui/react-popover@1.1.15
++ @radix-ui/react-progress@1.1.8
++ @radix-ui/react-radio-group@1.3.8
++ @radix-ui/react-scroll-area@1.2.10
++ @radix-ui/react-select@2.2.6
++ @radix-ui/react-separator@1.1.8
++ @radix-ui/react-slider@1.3.6
++ @radix-ui/react-slot@1.2.4
++ @radix-ui/react-switch@1.2.6
++ @radix-ui/react-tabs@1.1.13
++ @radix-ui/react-toast@1.2.15
++ @radix-ui/react-toggle@1.1.10
++ @radix-ui/react-toggle-group@1.1.11
++ @radix-ui/react-tooltip@1.2.8
++ @reactuses/core@6.1.9
++ @tanstack/react-query@5.90.19
++ @tanstack/react-table@8.21.3
++ class-variance-authority@0.7.1
++ clsx@2.1.1
++ cmdk@1.1.1
++ date-fns@4.1.0
++ embla-carousel-react@8.6.0
++ framer-motion@12.26.2
++ input-otp@1.4.2
++ lucide-react@0.525.0
++ next@16.1.3
++ next-auth@4.24.13
++ next-intl@4.7.0
++ next-themes@0.4.6
++ prisma@6.19.2
++ react@19.2.3
++ react-day-picker@9.13.0
++ react-dom@19.2.3
++ react-hook-form@7.71.1
++ react-markdown@10.1.0
++ react-resizable-panels@3.0.6
++ react-syntax-highlighter@15.6.6
++ recharts@2.15.4
++ sharp@0.34.5
++ sonner@2.0.7
++ tailwind-merge@3.4.0
++ tailwindcss-animate@1.0.7
++ uuid@11.1.0
++ vaul@1.1.2
++ z-ai-web-dev-sdk@0.0.17
++ zod@4.3.5
++ zustand@5.0.10
+
+827 packages installed [12.26s]
+==========================================
+[2026-03-17 21:09:57] Completed: bun install
+[LOG] Step: bun install | Duration: 12s
+==========================================
+
+==========================================
+[2026-03-17 21:09:58] Starting: bun run db:push
+==========================================
+[BUN] Setting up database...
+$ prisma db push
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": SQLite database "custom.db" at "file:/home/z/my-project/db/custom.db"
+
+SQLite database custom.db created at file:/home/z/my-project/db/custom.db
+
+🚀  Your database is now in sync with your Prisma schema. Done in 17ms
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v6.19.2) to ./node_modules/@prisma/client in 73ms
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.2 -> 7.5.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+==========================================
+[2026-03-17 21:09:59] Completed: bun run db:push
+[LOG] Step: bun run db:push | Duration: 1s
+==========================================
+
+==========================================
+[2026-03-17 21:09:59] Starting: Starting Next.js dev server
+==========================================
+[BUN] Starting development server...
+==========================================
+$ next dev -p 3000 2>&1 | tee dev.log
+[2026-03-17 21:09:59] Completed: Starting Next.js dev server
+[LOG] Step: Starting Next.js dev server | Duration: 0s
+==========================================
+
+==========================================
+[2026-03-17 21:09:59] Starting: Waiting for Next.js dev server
+==========================================
+Waiting for Next.js dev server to be ready on localhost:3000...
+Attempt 1/60: Next.js dev server not ready yet, waiting...
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://21.0.6.126:3000
+- Environments: .env
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.next/dev/types/**/*.ts'
+
+  The following mandatory changes were made to your tsconfig.json:
+
+  	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+
+✓ Ready in 942ms
+Next.js dev server is ready!
+ GET / 200 in 2.9s (compile: 2.8s, render: 133ms)
+==========================================
+ GET / 200 in 2.1s (compile: 1932ms, render: 201ms)
+[2026-03-17 21:10:03] Completed: Waiting for Next.js dev server
+[LOG] Step: Waiting for Next.js dev server | Duration: 4s
+==========================================
+
+==========================================
+[2026-03-17 21:10:03] Starting: Health check
+==========================================
+[BUN] Performing health check...
+ GET / 200 in 27ms (compile: 5ms, render: 23ms)
+[BUN] Health check passed
+==========================================
+[2026-03-17 21:10:03] Completed: Health check
+[LOG] Step: Health check | Duration: 0s
+==========================================
+
+==========================================
+[2026-03-17 21:10:03] Starting: Starting mini-services
+==========================================
+Found mini-services directory, scanning for sub-services...
+Mini-services startup completed. Started 0 service(s).
+==========================================
+[2026-03-17 21:10:03] Completed: Starting mini-services
+[LOG] Step: Starting mini-services | Duration: 0s
+==========================================
+
+Next.js dev server is running in background (PID: 331).
+Use 'kill 331' to stop it.
+ GET / 200 in 36ms (compile: 3ms, render: 33ms)
+ GET / 200 in 33ms (compile: 2ms, render: 31ms)
+ GET / 200 in 31ms (compile: 2ms, render: 29ms)
+ GET / 200 in 27ms (compile: 3ms, render: 24ms)
+ GET / 200 in 32ms (compile: 2ms, render: 30ms)
+ GET / 200 in 31ms (compile: 3ms, render: 29ms)
+ GET / 200 in 29ms (compile: 2ms, render: 27ms)
+ GET / 200 in 27ms (compile: 3ms, render: 24ms)
+ GET / 200 in 29ms (compile: 1823µs, render: 27ms)
+ GET / 200 in 27ms (compile: 1897µs, render: 25ms)
+ GET / 200 in 24ms (compile: 1778µs, render: 22ms)
+ GET / 200 in 33ms (compile: 2ms, render: 31ms)
+ GET / 200 in 24ms (compile: 1794µs, render: 22ms)
+ GET / 200 in 25ms (compile: 1893µs, render: 23ms)
+ GET / 200 in 25ms (compile: 1812µs, render: 23ms)
+ GET / 200 in 26ms (compile: 1941µs, render: 24ms)
+ GET / 200 in 30ms (compile: 2ms, render: 28ms)
+ GET / 200 in 26ms (compile: 2ms, render: 23ms)
+ GET / 200 in 23ms (compile: 1781µs, render: 21ms)
+ GET / 200 in 26ms (compile: 1874µs, render: 24ms)
+ GET / 200 in 78ms (compile: 46ms, render: 32ms)
+ GET / 200 in 13ms (compile: 2ms, render: 11ms)
+ GET / 200 in 15ms (compile: 1912µs, render: 13ms)
+ GET / 200 in 12ms (compile: 1791µs, render: 10ms)
+ GET / 200 in 17ms (compile: 1766µs, render: 16ms)
+ GET / 200 in 14ms (compile: 2ms, render: 12ms)
+ GET / 200 in 16ms (compile: 1918µs, render: 14ms)
+ GET / 200 in 18ms (compile: 3ms, render: 16ms)
+ GET / 200 in 98ms (compile: 1866µs, render: 97ms)
+ GET / 200 in 36ms (compile: 3ms, render: 33ms)
+ GET / 200 in 32ms (compile: 4ms, render: 27ms)
+ GET / 200 in 32ms (compile: 1916µs, render: 30ms)
+ GET / 200 in 24ms (compile: 1868µs, render: 22ms)
+ GET / 200 in 28ms (compile: 1675µs, render: 26ms)
+ GET / 200 in 29ms (compile: 5ms, render: 24ms)
+ GET / 200 in 27ms (compile: 1667µs, render: 25ms)
+ GET / 200 in 36ms (compile: 1949µs, render: 34ms)
+ GET / 200 in 27ms (compile: 4ms, render: 23ms)
+✓ Compiled in 435ms
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+⨯ unhandledRejection: Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+ GET / 500 in 2.7s (compile: 50ms, render: 2.6s)
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+⨯ unhandledRejection: Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3072)
+}
+ GET / 500 in 2.1s (compile: 5ms, render: 2.1s)
+✓ Compiled in 114ms
+⚠ Cross origin request detected from preview-chat-bf69a758-6b5e-4f9f-9e9e-9273fbc6655e.space.z.ai to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection: Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+ GET / 500 in 1714ms (compile: 45ms, render: 1669ms)
+✓ Compiled in 68ms
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection: Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+ GET / 500 in 1688ms (compile: 44ms, render: 1644ms)
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection: Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/src_d77ffd05._.js from module [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { GLOBAL_ERROR_MODULE => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_0 => "[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js Server Component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/builtin/not-found.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_3 => "[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_4 => "[project]/node_modules/next/dist/client/components/builtin/global-error.js [app-rsc] (ecmascript, Next.js Server Component)", MODULE_5 => "[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js Server Component)" } [app-rsc] (ecmascript) <locals>
+    at ignore-listed frames {
+  digest: '655698162',
+  [cause]: SyntaxError: Invalid regular expression: /[;-,\t]/: Range out of order in character class
+      at <unknown> (.next/dev/server/chunks/ssr/src_d77ffd05._.js:3082)
+}
+ GET / 500 in 1640ms (compile: 2ms, render: 1638ms)
+✓ Compiled in 100ms
+ GET / 200 in 199ms (compile: 58ms, render: 141ms)
+ GET /api/vocabulary?level=A2 200 in 282ms (compile: 267ms, render: 15ms)
+ GET / 200 in 45ms (compile: 3ms, render: 41ms)
+ GET /api/vocabulary?level=A2 200 in 7ms (compile: 1854µs, render: 5ms)
+ GET / 200 in 34ms (compile: 2ms, render: 32ms)
+ GET /api/vocabulary?level=A2 200 in 7ms (compile: 1951µs, render: 5ms)
+ GET / 200 in 38ms (compile: 2ms, render: 36ms)
+ GET /api/vocabulary?level=A2 200 in 20ms (compile: 16ms, render: 4ms)
+ GET / 200 in 157ms (compile: 45ms, render: 112ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 1998µs, render: 4ms)
+ GET / 200 in 44ms (compile: 3ms, render: 41ms)
+ GET /api/vocabulary?level=A2 200 in 5ms (compile: 1586µs, render: 4ms)
+ GET / 200 in 36ms (compile: 3ms, render: 33ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 1862µs, render: 5ms)
+ GET / 200 in 37ms (compile: 2ms, render: 35ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 1970µs, render: 4ms)
+ GET / 200 in 35ms (compile: 1945µs, render: 33ms)
+ GET /api/vocabulary?level=A2 200 in 5ms (compile: 1742µs, render: 3ms)
+ GET / 200 in 34ms (compile: 1945µs, render: 32ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 1855µs, render: 4ms)
+ GET / 200 in 29ms (compile: 1993µs, render: 27ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 2ms, render: 3ms)
+ GET / 200 in 30ms (compile: 4ms, render: 26ms)
+ GET /api/vocabulary?level=A2 200 in 5ms (compile: 1778µs, render: 3ms)
+ GET / 200 in 41ms (compile: 1907µs, render: 39ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 1710µs, render: 4ms)
+ GET / 200 in 32ms (compile: 2ms, render: 30ms)
+ GET /api/vocabulary?level=A2 200 in 6ms (compile: 2ms, render: 4ms)
+ GET / 200 in 28ms (compile: 1866µs, render: 26ms)
+ GET /api/vocabulary?level=A2 200 in 9ms (compile: 5ms, render: 4ms)
+ GET / 200 in 35ms (compile: 6ms, render: 29ms)
+ GET /api/vocabulary?level=A2 200 in 5ms (compile: 1898µs, render: 3ms)
+✓ Compiled in 195ms
+ GET / 200 in 204ms (compile: 48ms, render: 156ms)
+✓ Compiled in 132ms
+ GET / 200 in 184ms (compile: 56ms, render: 128ms)
+✓ Compiled in 131ms
+✓ Compiled in 119ms
+ GET / 200 in 175ms (compile: 50ms, render: 125ms)
+ GET / 200 in 47ms (compile: 3ms, render: 44ms)
+ GET / 200 in 42ms (compile: 2ms, render: 39ms)
+ POST /api/tts 200 in 15.0s (compile: 2ms, render: 15.0s)
+ POST /api/tts 200 in 20.0s (compile: 113ms, render: 19.9s)
+ POST /api/tts 200 in 18.7s (compile: 2ms, render: 18.7s)
+ POST /api/tts 200 in 20.1s (compile: 2ms, render: 20.1s)
+✓ Compiled in 134ms
+✓ Compiled in 141ms
+✓ Compiled in 160ms
+✓ Compiled in 188ms
+ GET / 200 in 165ms (compile: 55ms, render: 110ms)
+ GET / 200 in 46ms (compile: 2ms, render: 44ms)
+✓ Compiled in 140ms
+ GET / 200 in 170ms (compile: 48ms, render: 121ms)
+ GET / 200 in 48ms (compile: 3ms, render: 45ms)
+ GET / 200 in 41ms (compile: 1992µs, render: 39ms)
+ POST /api/tts 200 in 12.9s (compile: 1842µs, render: 12.9s)
+ GET / 200 in 30ms (compile: 1939µs, render: 28ms)
+ GET / 200 in 31ms (compile: 1987µs, render: 29ms)
+ GET / 200 in 33ms (compile: 1952µs, render: 31ms)
+ GET / 200 in 29ms (compile: 1823µs, render: 27ms)
+ GET / 200 in 28ms (compile: 1820µs, render: 27ms)
+ GET / 200 in 36ms (compile: 2ms, render: 33ms)
+ GET / 200 in 40ms (compile: 5ms, render: 35ms)
+ GET / 200 in 34ms (compile: 1968µs, render: 32ms)
+ GET / 200 in 30ms (compile: 1783µs, render: 28ms)
+ GET / 200 in 29ms (compile: 1892µs, render: 27ms)
+ GET / 200 in 33ms (compile: 2ms, render: 31ms)
+✓ Compiled in 139ms
+ GET / 200 in 197ms (compile: 51ms, render: 145ms)
+ GET / 200 in 42ms (compile: 2ms, render: 39ms)
+ GET / 200 in 32ms (compile: 1784µs, render: 30ms)
+ GET / 200 in 35ms (compile: 2ms, render: 33ms)
+✓ Compiled in 113ms
+ GET / 200 in 165ms (compile: 51ms, render: 114ms)
+ GET / 200 in 50ms (compile: 3ms, render: 47ms)
+ GET / 200 in 36ms (compile: 1972µs, render: 34ms)
+ POST /api/tts 200 in 11.7s (compile: 2ms, render: 11.7s)
+✓ Compiled in 164ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 200 in 169ms (compile: 50ms, render: 119ms)
+ GET / 200 in 49ms (compile: 2ms, render: 47ms)
+ POST /api/tts 200 in 14.2s (compile: 28ms, render: 14.2s)
+✓ Compiled in 136ms
+✓ Compiled in 133ms
+ GET / 200 in 149ms (compile: 46ms, render: 103ms)
+✓ Compiled in 166ms
+✓ Compiled in 138ms
+✓ Compiled in 124ms
+✓ Compiled in 133ms
+✓ Compiled in 128ms
+✓ Compiled in 127ms
+✓ Compiled in 138ms
+✓ Compiled in 136ms
+✓ Compiled in 141ms
+✓ Compiled in 148ms
+✓ Compiled in 134ms
+ GET / 200 in 165ms (compile: 47ms, render: 118ms)
+✓ Compiled in 150ms
+✓ Compiled in 110ms
+✓ Compiled in 126ms
+✓ Compiled in 117ms
+✓ Compiled in 160ms
+ GET / 200 in 175ms (compile: 50ms, render: 124ms)
+ GET / 200 in 47ms (compile: 3ms, render: 44ms)
+ GET / 200 in 40ms (compile: 1923µs, render: 39ms)
+ GET / 200 in 42ms (compile: 2ms, render: 40ms)
+ GET / 200 in 40ms (compile: 1878µs, render: 38ms)
+ GET / 200 in 29ms (compile: 1882µs, render: 27ms)
+ GET / 200 in 30ms (compile: 1857µs, render: 28ms)
+ GET / 200 in 28ms (compile: 1921µs, render: 26ms)
+ GET / 200 in 34ms (compile: 2ms, render: 32ms)
+ GET / 200 in 33ms (compile: 1766µs, render: 31ms)
+✓ Compiled in 204ms
+✓ Compiled in 216ms
+ GET / 200 in 68ms (compile: 46ms, render: 22ms)
+ GET / 200 in 124ms (compile: 3ms, render: 121ms)
+ GET / 200 in 48ms (compile: 2ms, render: 46ms)
+✓ Compiled in 222ms
+ GET / 200 in 176ms (compile: 50ms, render: 126ms)
+ GET / 200 in 43ms (compile: 2ms, render: 41ms)
+ POST /api/tts 200 in 11.4s (compile: 35ms, render: 11.4s)
+ GET / 200 in 40ms (compile: 2ms, render: 38ms)
+ GET / 200 in 42ms (compile: 2ms, render: 39ms)
+ GET / 200 in 55ms (compile: 4ms, render: 51ms)
+ GET / 200 in 43ms (compile: 2ms, render: 41ms)
+✓ Compiled in 131ms
+ GET / 200 in 171ms (compile: 50ms, render: 121ms)
+ GET / 200 in 45ms (compile: 1825µs, render: 43ms)
+✓ Compiled in 139ms
+ GET / 200 in 164ms (compile: 49ms, render: 114ms)
+ GET / 200 in 33ms (compile: 1944µs, render: 31ms)
+ GET / 200 in 49ms (compile: 3ms, render: 45ms)
+ GET / 200 in 43ms (compile: 2ms, render: 41ms)
+ GET / 200 in 39ms (compile: 1890µs, render: 37ms)
+ GET / 200 in 44ms (compile: 1893µs, render: 42ms)
+ GET / 200 in 175ms (compile: 52ms, render: 123ms)
+ GET / 200 in 61ms (compile: 3ms, render: 58ms)
+ GET / 200 in 59ms (compile: 8ms, render: 51ms)
+ GET / 200 in 47ms (compile: 1921µs, render: 45ms)
+ GET / 200 in 40ms (compile: 5ms, render: 36ms)
+ GET / 200 in 36ms (compile: 1933µs, render: 35ms)
+✓ Compiled in 133ms
+ GET / 200 in 187ms (compile: 51ms, render: 136ms)
+ GET / 200 in 47ms (compile: 2ms, render: 45ms)
+ GET / 200 in 34ms (compile: 1859µs, render: 33ms)
+ GET / 200 in 33ms (compile: 1877µs, render: 31ms)
+ GET / 200 in 28ms (compile: 1751µs, render: 27ms)
+ GET / 200 in 33ms (compile: 1696µs, render: 31ms)
+ GET / 200 in 34ms (compile: 3ms, render: 31ms)
+ GET / 200 in 60ms (compile: 3ms, render: 57ms)
+ GET / 200 in 41ms (compile: 3ms, render: 38ms)
+ GET / 200 in 45ms (compile: 2ms, render: 43ms)
+✓ Compiled in 135ms
+ GET / 200 in 194ms (compile: 50ms, render: 144ms)
+ GET / 200 in 48ms (compile: 3ms, render: 45ms)
+ GET / 200 in 47ms (compile: 2ms, render: 44ms)
+ GET / 200 in 47ms (compile: 2ms, render: 45ms)
+ GET / 200 in 39ms (compile: 3ms, render: 35ms)
+✓ Compiled in 136ms
+✓ Compiled in 129ms
+ GET / 200 in 184ms (compile: 52ms, render: 132ms)
+ POST /api/tts 200 in 9.8s (compile: 37ms, render: 9.8s)
+ POST /api/tts 200 in 6.3s (compile: 1745µs, render: 6.3s)
+ GET / 200 in 49ms (compile: 1775µs, render: 47ms)
+ GET / 200 in 36ms (compile: 2ms, render: 34ms)
+ GET / 200 in 40ms (compile: 2ms, render: 38ms)
+ GET / 200 in 34ms (compile: 2ms, render: 32ms)
+ GET / 200 in 37ms (compile: 1714µs, render: 36ms)
+✓ Compiled in 134ms
+ GET / 200 in 38ms (compile: 2ms, render: 36ms)
+✓ Compiled in 141ms
+ GET / 200 in 70ms (compile: 48ms, render: 21ms)
+ GET / 200 in 166ms (compile: 3ms, render: 163ms)
+ GET / 200 in 64ms (compile: 4ms, render: 60ms)
+ GET / 200 in 48ms (compile: 3ms, render: 45ms)
+ GET / 200 in 42ms (compile: 1946µs, render: 40ms)
+✓ Compiled in 135ms
+ GET / 200 in 165ms (compile: 52ms, render: 114ms)
+✓ Compiled in 1216ms
+ GET / 200 in 221ms (compile: 63ms, render: 158ms)
+ GET / 200 in 205ms (compile: 64ms, render: 141ms)
+ GET / 200 in 38ms (compile: 3ms, render: 36ms)
+ GET / 200 in 52ms (compile: 4ms, render: 49ms)
