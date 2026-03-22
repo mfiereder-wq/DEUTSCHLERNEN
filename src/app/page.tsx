@@ -25,6 +25,109 @@ import {
 import { sentenceExercises, stories, SentenceExercise, Story } from '@/data/exercises';
 
 // ============================================
+// TYPES & INTERFACES
+// ============================================
+interface UserProgress {
+  xp: number;
+  level: number;
+  totalXp: number;
+  wordsLearned: number;
+  quizzesCompleted: number;
+  sentencesCompleted: number;
+  storiesCompleted: number;
+  correctAnswers: number;
+  totalAnswers: number;
+  streak: number;
+  lastActiveDate: string;
+  dailyTasks: DailyTask[];
+  achievements: string[];
+  weeklyXP: number[];
+}
+
+interface DailyTask {
+  id: string;
+  title: string;
+  description: string;
+  xpReward: number;
+  progress: number;
+  target: number;
+  completed: boolean;
+  type: 'quiz' | 'cards' | 'sentences' | 'stories' | 'words';
+}
+
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  xpReward: number;
+  requirement: (progress: UserProgress) => boolean;
+}
+
+// Level configuration
+const LEVEL_CONFIG = {
+  maxXpPerLevel: 500,
+  levelMultiplier: 1.5,
+  levelTitles: [
+    'Anfänger', 'Einsteiger', 'Lernender',
+    'Fortgeschritten', 'Kenner', 'Profi',
+    'Experte', 'Meister', 'Großmeister', 'Legende'
+  ]
+};
+
+// XP Rewards
+const XP_REWARDS = {
+  correctQuizAnswer: 10,
+  correctSentence: 15,
+  correctStoryQuestion: 20,
+  completeStory: 50,
+  completeQuiz: 30,
+  completeTest: 40,
+  dailyStreak: 25,
+  levelUp: 100,
+};
+
+// Achievements
+const ACHIEVEMENTS: Achievement[] = [
+  { id: 'first_steps', title: 'Erste Schritte', description: 'Beende dein erstes Quiz', icon: '🎯', xpReward: 20, requirement: (p) => p.quizzesCompleted >= 1 },
+  { id: 'vocabulary_master', title: 'Vokabel-Meister', description: 'Lerne 50 Vokabeln', icon: '📚', xpReward: 50, requirement: (p) => p.wordsLearned >= 50 },
+  { id: 'quiz_champion', title: 'Quiz-Champion', description: 'Beende 10 Quizze', icon: '🏆', xpReward: 75, requirement: (p) => p.quizzesCompleted >= 10 },
+  { id: 'sentence_pro', title: 'Satz-Profi', description: 'Vervollständige 25 Sätze', icon: '✏️', xpReward: 60, requirement: (p) => p.sentencesCompleted >= 25 },
+  { id: 'story_reader', title: 'Geschichten-Leser', description: 'Lese 5 Geschichten', icon: '📖', xpReward: 80, requirement: (p) => p.storiesCompleted >= 5 },
+  { id: 'perfect_score', title: 'Perfekte Punktzahl', description: 'Erreiche 100% in einem Quiz', icon: '⭐', xpReward: 100, requirement: (p) => p.totalAnswers > 0 && p.correctAnswers === p.totalAnswers },
+  { id: 'streak_week', title: 'Wochen-Streak', description: '7 Tage am Stück lernen', icon: '🔥', xpReward: 150, requirement: (p) => p.streak >= 7 },
+  { id: 'level_5', title: 'Aufstrebend', description: 'Erreiche Level 5', icon: '📈', xpReward: 200, requirement: (p) => p.level >= 5 },
+  { id: 'level_10', title: 'Legende', description: 'Erreiche Level 10', icon: '👑', xpReward: 500, requirement: (p) => p.level >= 10 },
+  { id: 'xp_1000', title: 'Tausend XP', description: 'Sammle 1000 XP', icon: '💎', xpReward: 100, requirement: (p) => p.totalXp >= 1000 },
+];
+
+// Default daily tasks
+const createDefaultDailyTasks = (): DailyTask[] => [
+  { id: 'quiz', title: 'Tägliches Quiz', description: 'Beende ein Quiz', xpReward: 30, progress: 0, target: 1, completed: false, type: 'quiz' },
+  { id: 'words', title: 'Vokabeln lernen', description: 'Lerne 10 Vokabelkarten', xpReward: 20, progress: 0, target: 10, completed: false, type: 'words' },
+  { id: 'sentences', title: 'Sätze üben', description: 'Vervollständige 5 Sätze', xpReward: 25, progress: 0, target: 5, completed: false, type: 'sentences' },
+  { id: 'stories', title: 'Geschichte lesen', description: 'Lese eine Geschichte', xpReward: 40, progress: 0, target: 1, completed: false, type: 'stories' },
+];
+
+// Default progress
+const defaultProgress: UserProgress = {
+  xp: 0,
+  level: 1,
+  totalXp: 0,
+  wordsLearned: 0,
+  quizzesCompleted: 0,
+  sentencesCompleted: 0,
+  storiesCompleted: 0,
+  correctAnswers: 0,
+  totalAnswers: 0,
+  streak: 0,
+  lastActiveDate: '',
+  dailyTasks: createDefaultDailyTasks(),
+  achievements: [],
+  weeklyXP: [0, 0, 0, 0, 0, 0, 0],
+};
+
+// ============================================
 // ICONS
 // ============================================
 const BookIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>;
@@ -41,6 +144,10 @@ const ArrowLeftIcon = () => <svg className="w-5 h-5" fill="none" stroke="current
 const ArrowRightIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>;
 const ShuffleIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>;
 const VolumeIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>;
+const TrophyIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>;
+const FireIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>;
+const StarIcon = () => <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>;
+const TargetIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth={2} /><circle cx="12" cy="12" r="6" strokeWidth={2} /><circle cx="12" cy="12" r="2" strokeWidth={2} /></svg>;
 
 // ============================================
 // TTS UTILITY - Web Speech API with better support
@@ -315,12 +422,89 @@ const videoLibrary: VideoItem[] = [
 ];
 
 // ============================================
+// PROGRESS CONTEXT
+// ============================================
+const ProgressContext = {
+  save: (progress: UserProgress) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('deutschlernen_progress', JSON.stringify(progress));
+    }
+  },
+  load: (): UserProgress => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('deutschlernen_progress');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return defaultProgress;
+        }
+      }
+    }
+    return defaultProgress;
+  },
+};
+
+// Calculate XP needed for next level
+function getXpForLevel(level: number): number {
+  return Math.floor(LEVEL_CONFIG.maxXpPerLevel * Math.pow(LEVEL_CONFIG.levelMultiplier, level - 1));
+}
+
+// Get level title
+function getLevelTitle(level: number): string {
+  const index = Math.min(level - 1, LEVEL_CONFIG.levelTitles.length - 1);
+  return LEVEL_CONFIG.levelTitles[index];
+}
+
+// Initialize progress with streak update logic
+function initializeProgress(): UserProgress {
+  const saved = ProgressContext.load();
+  const today = new Date().toISOString().split('T')[0];
+  
+  if (saved.lastActiveDate === today) {
+    return saved;
+  }
+  
+  // Check and update streak
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  
+  let newStreak = saved.streak;
+  if (saved.lastActiveDate === yesterdayStr) {
+    newStreak += 1;
+  } else if (saved.lastActiveDate !== today) {
+    newStreak = 1;
+  }
+  
+  // Reset daily tasks and update weekly XP
+  const dayIndex = new Date().getDay();
+  const newWeeklyXP = [...saved.weeklyXP];
+  newWeeklyXP[dayIndex] = 0;
+  
+  const updatedProgress = {
+    ...saved,
+    streak: newStreak,
+    lastActiveDate: today,
+    dailyTasks: createDefaultDailyTasks(),
+    weeklyXP: newWeeklyXP,
+  };
+  
+  ProgressContext.save(updatedProgress);
+  return updatedProgress;
+}
+
+// ============================================
 // MAIN APP
 // ============================================
 export default function DeutschLernenApp() {
   const [level, setLevel] = useState<Level>('A2');
-  const [activeTab, setActiveTab] = useState('cards');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [importedCards, setImportedCards] = useState<VocabularyCard[]>([]);
+  const [userProgress, setUserProgress] = useState<UserProgress>(initializeProgress);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [newLevel, setNewLevel] = useState(1);
+  const [showAchievement, setShowAchievement] = useState<Achievement | null>(null);
 
   // Use useMemo for vocabulary - no cascading renders
   const vocabulary = useMemo(() => {
@@ -330,6 +514,84 @@ export default function DeutschLernenApp() {
 
   const loading = false;
 
+  // Add XP and check for level up
+  const addXP = useCallback((amount: number, type: 'quiz' | 'cards' | 'sentences' | 'stories' | 'words' = 'quiz') => {
+    setUserProgress(prev => {
+      const today = new Date().getDay();
+      const newWeeklyXP = [...prev.weeklyXP];
+      newWeeklyXP[today] += amount;
+      
+      let newXP = prev.xp + amount;
+      let newLevel = prev.level;
+      let newTotalXp = prev.totalXp + amount;
+      
+      // Check for level up
+      const xpNeeded = getXpForLevel(prev.level);
+      if (newXP >= xpNeeded) {
+        newXP = newXP - xpNeeded;
+        newLevel = prev.level + 1;
+        newTotalXp += XP_REWARDS.levelUp;
+        
+        // Show level up notification
+        setNewLevel(newLevel);
+        setShowLevelUp(true);
+        setTimeout(() => setShowLevelUp(false), 3000);
+      }
+      
+      // Update daily task progress
+      const newTasks = prev.dailyTasks.map(task => {
+        if (task.type === type && !task.completed) {
+          const newProgress = task.progress + 1;
+          if (newProgress >= task.target && !task.completed) {
+            // Task completed - award XP
+            return { ...task, progress: newProgress, completed: true };
+          }
+          return { ...task, progress: newProgress };
+        }
+        return task;
+      });
+      
+      // Award bonus XP for completed tasks
+      const completedTasks = newTasks.filter(t => t.completed && !prev.dailyTasks.find(pt => pt.id === t.id && pt.completed));
+      const bonusXP = completedTasks.reduce((sum, t) => sum + t.xpReward, 0);
+      
+      const updated = {
+        ...prev,
+        xp: newXP + (bonusXP > 0 && !showLevelUp ? bonusXP : 0),
+        totalXp: newTotalXp + (bonusXP > 0 && !showLevelUp ? bonusXP : 0),
+        level: newLevel,
+        weeklyXP: newWeeklyXP,
+        dailyTasks: newTasks,
+      };
+      
+      // Check for new achievements
+      const newAchievements = ACHIEVEMENTS.filter(a => 
+        a.requirement(updated) && !prev.achievements.includes(a.id)
+      );
+      
+      if (newAchievements.length > 0) {
+        updated.achievements = [...prev.achievements, ...newAchievements.map(a => a.id)];
+        updated.totalXp += newAchievements.reduce((sum, a) => sum + a.xpReward, 0);
+        
+        // Show achievement notification
+        setShowAchievement(newAchievements[0]);
+        setTimeout(() => setShowAchievement(null), 3000);
+      }
+      
+      ProgressContext.save(updated);
+      return updated;
+    });
+  }, [showLevelUp]);
+
+  // Update stats
+  const updateStats = useCallback((updates: Partial<UserProgress>) => {
+    setUserProgress(prev => {
+      const updated = { ...prev, ...updates };
+      ProgressContext.save(updated);
+      return updated;
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-pink-50 to-orange-50 dark:from-slate-950 dark:via-purple-950 dark:to-slate-900 flex flex-col">
       {/* Decorative Background Elements */}
@@ -338,6 +600,54 @@ export default function DeutschLernenApp() {
         <div className="absolute top-1/4 -left-20 w-60 h-60 bg-gradient-to-br from-yellow-300/20 to-orange-300/20 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-br from-emerald-300/20 to-teal-300/20 rounded-full blur-3xl" />
       </div>
+
+      {/* Level Up Animation */}
+      <AnimatePresence>
+        {showLevelUp && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, y: -100 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: -100 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.5, repeat: 2 }}
+              className="text-center"
+            >
+              <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 flex items-center justify-center shadow-2xl">
+                <span className="text-5xl">🎉</span>
+              </div>
+              <h2 className="text-4xl font-bold text-white mb-2">Level Up!</h2>
+              <p className="text-2xl text-white/80">Level {newLevel}</p>
+              <p className="text-lg text-yellow-300 mt-2">{getLevelTitle(newLevel)}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Achievement Notification */}
+      <AnimatePresence>
+        {showAchievement && (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            className="fixed top-24 right-4 z-[90] max-w-sm"
+          >
+            <Card className="bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-400 text-white border-0 shadow-2xl">
+              <CardContent className="py-4 px-6 flex items-center gap-4">
+                <span className="text-3xl">{showAchievement.icon}</span>
+                <div>
+                  <p className="font-bold">{showAchievement.title}</p>
+                  <p className="text-sm opacity-90">{showAchievement.description}</p>
+                  <p className="text-xs mt-1">+{showAchievement.xpReward} XP</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 shadow-lg shadow-violet-500/5">
@@ -360,8 +670,15 @@ export default function DeutschLernenApp() {
               </div>
             </div>
 
-            {/* Level Toggle */}
+            {/* Level & XP Display */}
             <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30">
+                <span className="text-lg">⭐</span>
+                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">Lv.{userProgress.level}</span>
+                <span className="text-xs text-slate-500">{userProgress.xp}/{getXpForLevel(userProgress.level)} XP</span>
+              </div>
+              
+              {/* Level Toggle */}
               <div className="flex rounded-2xl bg-gradient-to-r from-slate-100 to-slate-50 p-1.5 dark:from-slate-800 dark:to-slate-800/50 shadow-inner">
                 <button
                   onClick={() => setLevel('A2')}
@@ -384,6 +701,7 @@ export default function DeutschLernenApp() {
                   B1
                 </button>
               </div>
+              
               <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-100 to-pink-100 dark:from-violet-900/30 dark:to-pink-900/30">
                 <span className="text-lg">📚</span>
                 <Badge variant="outline" className="text-sm font-medium border-0 bg-transparent">
@@ -399,7 +717,11 @@ export default function DeutschLernenApp() {
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6 relative z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-6 h-auto gap-1.5 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-2 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50">
+          <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-7 h-auto gap-1.5 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-2 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50">
+            <TabsTrigger value="dashboard" className="gap-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg">
+              <TrophyIcon />
+              <span className="hidden sm:inline">Level</span>
+            </TabsTrigger>
             <TabsTrigger value="cards" className="gap-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg">
               <BookIcon />
               <span className="hidden sm:inline">Karten</span>
@@ -426,20 +748,73 @@ export default function DeutschLernenApp() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="dashboard">
+            <LevelDashboard 
+              progress={userProgress} 
+              onReset={() => {
+                setUserProgress(defaultProgress);
+                ProgressContext.save(defaultProgress);
+                toast.success('Fortschritt zurückgesetzt');
+              }}
+            />
+          </TabsContent>
+
           <TabsContent value="cards">
-            <FlashcardMode vocabulary={vocabulary} loading={loading} level={level} />
+            <FlashcardMode 
+              vocabulary={vocabulary} 
+              loading={loading} 
+              level={level} 
+              onXP={(count) => {
+                addXP(count * 2, 'words');
+                updateStats({ wordsLearned: userProgress.wordsLearned + count });
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="quiz">
-            <QuizMode vocabulary={vocabulary} loading={loading} level={level} />
+            <QuizMode 
+              vocabulary={vocabulary} 
+              loading={loading} 
+              level={level}
+              onXP={(correct, total) => {
+                addXP(correct * XP_REWARDS.correctQuizAnswer, 'quiz');
+                updateStats({ 
+                  quizzesCompleted: userProgress.quizzesCompleted + 1,
+                  correctAnswers: userProgress.correctAnswers + correct,
+                  totalAnswers: userProgress.totalAnswers + total,
+                });
+                if (correct === total) {
+                  addXP(XP_REWARDS.completeQuiz);
+                }
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="sentences">
-            <SentenceMode level={level} />
+            <SentenceMode 
+              level={level}
+              onXP={(correct) => {
+                addXP(correct * XP_REWARDS.correctSentence, 'sentences');
+                updateStats({ sentencesCompleted: userProgress.sentencesCompleted + correct });
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="stories">
-            <StoryMode level={level} />
+            <StoryMode 
+              level={level}
+              onXP={(correct, total, completed) => {
+                addXP(correct * XP_REWARDS.correctStoryQuestion, 'stories');
+                if (completed) {
+                  addXP(XP_REWARDS.completeStory);
+                  updateStats({ storiesCompleted: userProgress.storiesCompleted + 1 });
+                }
+                updateStats({ 
+                  correctAnswers: userProgress.correctAnswers + correct,
+                  totalAnswers: userProgress.totalAnswers + total,
+                });
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="videos">
@@ -460,9 +835,14 @@ export default function DeutschLernenApp() {
               <span>🇩🇪</span>
               Basierend auf den offiziellen Wortschatzlisten des Goethe-Instituts und telc
             </p>
-            <Badge className={`bg-gradient-to-r ${level === 'A2' ? 'from-emerald-500 to-teal-500' : 'from-violet-500 to-purple-500'} text-white border-0`}>
-              {level}-Niveau
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 flex items-center gap-1">
+                <span>⭐</span> Lv.{userProgress.level} - {getLevelTitle(userProgress.level)}
+              </Badge>
+              <Badge className={`bg-gradient-to-r ${level === 'A2' ? 'from-emerald-500 to-teal-500' : 'from-violet-500 to-purple-500'} text-white border-0`}>
+                {level}-Niveau
+              </Badge>
+            </div>
           </div>
         </div>
       </footer>
@@ -471,15 +851,253 @@ export default function DeutschLernenApp() {
 }
 
 // ============================================
+// LEVEL DASHBOARD
+// ============================================
+function LevelDashboard({ progress, onReset }: { progress: UserProgress; onReset: () => void }) {
+  const xpForNextLevel = getXpForLevel(progress.level);
+  const xpProgress = (progress.xp / xpForNextLevel) * 100;
+  const unlockedAchievements = ACHIEVEMENTS.filter(a => progress.achievements.includes(a.id));
+  const lockedAchievements = ACHIEVEMENTS.filter(a => !progress.achievements.includes(a.id));
+  
+  const todayXP = progress.weeklyXP[new Date().getDay()];
+  const totalWeeklyXP = progress.weeklyXP.reduce((a, b) => a + b, 0);
+  const completedTasks = progress.dailyTasks.filter(t => t.completed).length;
+  
+  const dayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Level Card */}
+      <Card className="border-0 bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-400 text-white shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <CardContent className="py-8 relative">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            {/* Level Badge */}
+            <div className="relative">
+              <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border-4 border-white/30">
+                <div className="text-center">
+                  <p className="text-4xl font-bold">{progress.level}</p>
+                  <p className="text-xs">LEVEL</p>
+                </div>
+              </div>
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-orange-500 rounded-full text-sm font-bold shadow-lg">
+                {getLevelTitle(progress.level)}
+              </div>
+            </div>
+            
+            {/* XP Progress */}
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-2xl font-bold mb-1">Willkommen zurück!</h2>
+              <p className="text-white/80 mb-4">Noch {xpForNextLevel - progress.xp} XP bis Level {progress.level + 1}</p>
+              
+              <div className="bg-white/20 rounded-full h-4 overflow-hidden mb-2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${xpProgress}%` }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                  className="h-full bg-white rounded-full"
+                />
+              </div>
+              <p className="text-sm text-white/80">{progress.xp} / {xpForNextLevel} XP</p>
+              
+              {/* Streak */}
+              <div className="flex items-center justify-center md:justify-start gap-2 mt-4">
+                <div className="flex items-center gap-1 px-3 py-1 bg-white/20 rounded-full">
+                  <FireIcon />
+                  <span className="font-bold">{progress.streak}</span>
+                  <span className="text-sm">Tage Streak</span>
+                </div>
+                <div className="flex items-center gap-1 px-3 py-1 bg-white/20 rounded-full">
+                  <StarIcon />
+                  <span className="font-bold">{progress.totalXp}</span>
+                  <span className="text-sm">Total XP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Daily Tasks */}
+        <Card className="border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TargetIcon />
+              Tägliche Aufgaben
+            </CardTitle>
+            <CardDescription>{completedTasks} von {progress.dailyTasks.length} erledigt</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {progress.dailyTasks.map(task => (
+              <div
+                key={task.id}
+                className={`p-3 rounded-xl border-2 transition-all ${
+                  task.completed 
+                    ? 'bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-300 dark:border-emerald-700' 
+                    : 'bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      task.completed 
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' 
+                        : 'bg-slate-200 dark:bg-slate-600'
+                    }`}>
+                      {task.completed ? <CheckIcon /> : <span className="text-sm">{task.progress}/{task.target}</span>}
+                    </div>
+                    <div>
+                      <p className={`font-medium ${task.completed ? 'text-emerald-600 dark:text-emerald-400' : ''}`}>
+                        {task.title}
+                      </p>
+                      <p className="text-xs text-slate-500">{task.description}</p>
+                    </div>
+                  </div>
+                  <Badge className={`${task.completed ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'} text-white border-0`}>
+                    +{task.xpReward} XP
+                  </Badge>
+                </div>
+                {!task.completed && (
+                  <Progress 
+                    value={(task.progress / task.target) * 100} 
+                    className="h-1 mt-2 bg-slate-200 dark:bg-slate-600"
+                  />
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Weekly Stats */}
+        <Card className="border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              📊 Wochenübersicht
+            </CardTitle>
+            <CardDescription>{totalWeeklyXP} XP diese Woche</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-end justify-between h-32 gap-1">
+              {progress.weeklyXP.map((xp, i) => {
+                const today = new Date().getDay();
+                const isToday = i === today;
+                const maxXP = Math.max(...progress.weeklyXP, 100);
+                const height = maxXP > 0 ? (xp / maxXP) * 100 : 0;
+                
+                return (
+                  <div key={i} className="flex flex-col items-center gap-1 flex-1">
+                    <div className="w-full h-24 bg-slate-100 dark:bg-slate-700 rounded-lg relative overflow-hidden">
+                      <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: `${height}%` }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
+                        className={`absolute bottom-0 w-full rounded-lg ${
+                          isToday 
+                            ? 'bg-gradient-to-t from-yellow-500 to-orange-400' 
+                            : 'bg-gradient-to-t from-violet-400 to-pink-400'
+                        }`}
+                      />
+                    </div>
+                    <span className={`text-xs font-medium ${isToday ? 'text-orange-500' : 'text-slate-500'}`}>
+                      {dayNames[i]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Wörter gelernt', value: progress.wordsLearned, icon: '📚', color: 'from-violet-400 to-purple-400' },
+          { label: 'Quizze beendet', value: progress.quizzesCompleted, icon: '🏆', color: 'from-pink-400 to-rose-400' },
+          { label: 'Sätze vervollständigt', value: progress.sentencesCompleted, icon: '✏️', color: 'from-orange-400 to-amber-400' },
+          { label: 'Geschichten gelesen', value: progress.storiesCompleted, icon: '📖', color: 'from-emerald-400 to-teal-400' },
+        ].map((stat) => (
+          <Card key={stat.label} className="border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-lg overflow-hidden">
+            <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
+            <CardContent className="py-4 text-center">
+              <span className="text-2xl">{stat.icon}</span>
+              <p className="text-2xl font-bold mt-2 bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-500 dark:from-slate-200 dark:to-slate-400">
+                {stat.value}
+              </p>
+              <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Achievements */}
+      <Card className="border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-xl">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            🏅 Erfolge ({unlockedAchievements.length}/{ACHIEVEMENTS.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {ACHIEVEMENTS.map(achievement => {
+              const isUnlocked = progress.achievements.includes(achievement.id);
+              return (
+                <motion.div
+                  key={achievement.id}
+                  whileHover={{ scale: 1.05 }}
+                  className={`relative p-4 rounded-xl border-2 text-center transition-all ${
+                    isUnlocked
+                      ? 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300 dark:border-yellow-700'
+                      : 'bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 opacity-60'
+                  }`}
+                >
+                  <span className={`text-3xl ${!isUnlocked && 'grayscale'}`}>{achievement.icon}</span>
+                  <p className="font-medium text-sm mt-2">{achievement.title}</p>
+                  <p className="text-xs text-slate-500 mt-1">{achievement.description}</p>
+                  <Badge className={`mt-2 text-xs ${isUnlocked ? 'bg-yellow-500' : 'bg-slate-400'} text-white border-0`}>
+                    +{achievement.xpReward} XP
+                  </Badge>
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-8 h-8 bg-slate-400/50 rounded-full flex items-center justify-center">
+                        <span className="text-white text-lg">🔒</span>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Reset Button */}
+      <div className="text-center">
+        <Button variant="outline" onClick={onReset} className="text-red-500 border-red-200 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-900/20">
+          Fortschritt zurücksetzen
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
 // FLASHCARD MODE
 // ============================================
-function FlashcardMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]; loading: boolean; level: Level }) {
+function FlashcardMode({ vocabulary, loading, level, onXP }: { 
+  vocabulary: VocabularyCard[]; 
+  loading: boolean; 
+  level: Level;
+  onXP: (count: number) => void;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showTest, setShowTest] = useState(false);
   const [testAnswers, setTestAnswers] = useState<Record<string, boolean>>({});
   const [testCards, setTestCards] = useState<VocabularyCard[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [cardsViewed, setCardsViewed] = useState(0);
 
   // Component resets automatically when level changes via key prop in parent
 
@@ -487,7 +1105,16 @@ function FlashcardMode({ vocabulary, loading, level }: { vocabulary: VocabularyC
 
   const nextCard = () => {
     setIsFlipped(false);
-    setTimeout(() => setCurrentIndex((prev) => (prev + 1) % vocabulary.length), 150);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % vocabulary.length);
+      setCardsViewed(prev => {
+        const newCount = prev + 1;
+        if (newCount % 5 === 0) {
+          onXP(5);
+        }
+        return newCount;
+      });
+    }, 150);
   };
 
   const prevCard = () => {
@@ -566,6 +1193,7 @@ function FlashcardMode({ vocabulary, loading, level }: { vocabulary: VocabularyC
         setAnswers={setTestAnswers}
         onClose={() => setShowTest(false)}
         level={level}
+        onXP={onXP}
       />
     );
   }
@@ -685,13 +1313,15 @@ function FlashcardTest({
   answers,
   setAnswers,
   onClose,
-  level
+  level,
+  onXP
 }: {
   cards: VocabularyCard[];
   answers: Record<string, boolean>;
   setAnswers: (a: Record<string, boolean>) => void;
   onClose: () => void;
   level: Level;
+  onXP: (count: number) => void;
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
@@ -716,6 +1346,10 @@ function FlashcardTest({
 
   if (isComplete) {
     const percentage = Math.round((correctCount / cards.length) * 100);
+    // Award XP based on correct answers
+    if (correctCount > 0) {
+      onXP(correctCount);
+    }
     return (
       <Card className="max-w-lg mx-auto border-0 bg-gradient-to-br from-violet-100 via-pink-100 to-orange-100 dark:from-violet-900/30 dark:via-pink-900/30 dark:to-orange-900/30 shadow-2xl">
         <CardContent className="py-12 text-center">
@@ -726,6 +1360,10 @@ function FlashcardTest({
           <p className="text-slate-600 dark:text-slate-300 mb-6">
             Du hast {correctCount} von {cards.length} Vokabeln richtig beantwortet.
           </p>
+          <div className="flex items-center justify-center gap-2 mb-6 text-lg">
+            <span className="text-2xl">⭐</span>
+            <span className="font-bold text-orange-500">+{correctCount * 5} XP</span>
+          </div>
           <Button onClick={onClose} size="lg" className="rounded-xl bg-gradient-to-r from-violet-500 to-pink-500 text-white">Zurück zu den Karten</Button>
         </CardContent>
       </Card>
@@ -765,7 +1403,7 @@ function FlashcardTest({
             <div className="flex items-center gap-2 mb-2">
               {answers[currentCard.id] ? <CheckIcon /> : <XIcon />}
               <span className={answers[currentCard.id] ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
-                {answers[currentCard.id] ? 'Richtig!' : 'Leider falsch'}
+                {answers[currentCard.id] ? 'Richtig! +5 XP' : 'Leider falsch'}
               </span>
             </div>
             {!answers[currentCard.id] && (
@@ -793,7 +1431,12 @@ function FlashcardTest({
 // ============================================
 // QUIZ MODE
 // ============================================
-function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]; loading: boolean; level: Level }) {
+function QuizMode({ vocabulary, loading, level, onXP }: { 
+  vocabulary: VocabularyCard[]; 
+  loading: boolean; 
+  level: Level;
+  onXP: (correct: number, total: number) => void;
+}) {
   // Initialize quiz cards on mount (key prop handles level changes)
   const [quizCards, setQuizCards] = useState<VocabularyCard[]>(() =>
     [...vocabulary].sort(() => Math.random() - 0.5).slice(0, 10)
@@ -836,6 +1479,8 @@ function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]
   const nextQuestion = () => {
     if (currentIndex >= quizCards.length - 1) {
       setQuizComplete(true);
+      // Award XP at end of quiz
+      onXP(score, quizCards.length);
     } else {
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -856,7 +1501,16 @@ function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]
             <span className="text-3xl font-bold text-white">{percentage}%</span>
           </div>
           <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Quiz abgeschlossen!</h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-6">Du hast {score} von {quizCards.length} Fragen richtig beantwortet.</p>
+          <p className="text-slate-600 dark:text-slate-300 mb-4">Du hast {score} von {quizCards.length} Fragen richtig beantwortet.</p>
+          <div className="flex items-center justify-center gap-2 mb-6 text-lg">
+            <span className="text-2xl">⭐</span>
+            <span className="font-bold text-orange-500">+{score * XP_REWARDS.correctQuizAnswer + (score === quizCards.length ? XP_REWARDS.completeQuiz : 0)} XP</span>
+          </div>
+          {score === quizCards.length && (
+            <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-0 mb-4">
+              🏆 Perfekte Punktzahl!
+            </Badge>
+          )}
           <Button onClick={startQuiz} size="lg" className="rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white">Nochmal spielen</Button>
         </CardContent>
       </Card>
@@ -867,27 +1521,34 @@ function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2">
-          <span className="text-lg">🎯</span>
+          <span className="text-lg">❓</span>
           Frage {currentIndex + 1} von {quizCards.length}
         </span>
-        <span className="text-pink-600 dark:text-pink-400 font-medium flex items-center gap-1">
-          <span>✨</span> {score} richtig
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-emerald-600 dark:text-emerald-400 font-medium">✓ {score}</span>
+        </div>
       </div>
       <Progress value={((currentIndex + 1) / quizCards.length) * 100} className="h-2 bg-slate-200 dark:bg-slate-700 [&>div]:bg-gradient-to-r [&>div]:from-pink-500 [&>div]:to-rose-500" />
 
       <Card className="border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-xl overflow-hidden">
         <div className="h-2 bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500" />
         <CardHeader>
-          <Badge className={`w-fit ${level === 'A2' ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-violet-500 to-purple-500'} text-white border-0`}>{level} Quiz</Badge>
-          <CardTitle className="text-2xl mt-2">Was bedeutet &ldquo;{currentCard?.word}&rdquo;?</CardTitle>
+          <div className="flex items-center gap-2">
+            <Badge className={`${level === 'A2' ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-violet-500 to-purple-500'} text-white border-0`}>{level}</Badge>
+          </div>
+          <CardTitle className="text-xl">Was bedeutet dieses Wort?</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <AnimatePresence mode="wait">
+        <CardContent className="space-y-6">
+          <div className="text-center py-6 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl">
+            {currentCard.article && <span className="text-slate-400 mr-2">{currentCard.article}</span>}
+            <span className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">{currentCard.word}</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             {options.map((opt, idx) => {
               const isSelected = selectedAnswer === idx;
               const isCorrect = opt?.id === currentCard?.id;
-              let classes = 'border-2 border-slate-200 dark:border-slate-600 hover:border-pink-300 dark:hover:border-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20';
+              let classes = 'border-2 border-slate-200 dark:border-slate-600';
               if (showResult) {
                 if (isCorrect) classes = 'border-2 border-emerald-400 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30';
                 else if (isSelected) classes = 'border-2 border-red-400 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30';
@@ -897,105 +1558,74 @@ function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]
                   key={opt?.id || idx}
                   onClick={() => handleAnswer(idx)}
                   disabled={showResult}
-                  className={`w-full p-4 text-left rounded-xl transition-all ${classes}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  className={`p-4 rounded-xl transition-all hover:bg-pink-50 dark:hover:bg-pink-900/20 ${classes}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1, duration: 0.3 }}
-                  whileHover={!showResult ? { scale: 1.02, x: 5 } : {}}
-                  whileTap={!showResult ? { scale: 0.98 } : {}}
+                  whileHover={!showResult ? { scale: 1.03 } : {}}
+                  whileTap={!showResult ? { scale: 0.97 } : {}}
                 >
-                  <span className="flex items-center gap-3">
-                    <motion.span 
-                      className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-medium ${showResult && isCorrect ? 'bg-emerald-500 text-white border-emerald-500' : showResult && isSelected ? 'bg-red-500 text-white border-red-500' : 'border-slate-300 dark:border-slate-500'}`}
-                      animate={showResult && isCorrect ? { scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] } : showResult && isSelected ? { x: [0, -10, 10, -10, 10, 0] } : {}}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {idx + 1}
-                    </motion.span>
-                    <span className="font-medium">{opt?.translation}</span>
-                    <AnimatePresence>
-                      {showResult && isCorrect && (
-                        <motion.div
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                        >
-                          <CheckIcon />
-                        </motion.div>
-                      )}
-                      {showResult && isSelected && !isCorrect && (
-                        <motion.div
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                        >
-                          <XIcon />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </span>
+                  <span className="font-medium">{opt?.translation}</span>
                 </motion.button>
               );
             })}
-          </AnimatePresence>
-        </CardContent>
-      </Card>
+          </div>
 
-      {/* Animated Feedback Overlay */}
-      <AnimatePresence>
-        {showResult && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="flex justify-center"
-          >
-            {options[selectedAnswer!]?.id === currentCard?.id ? (
+          {/* Animated Feedback */}
+          <AnimatePresence>
+            {showResult && (
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold shadow-lg shadow-emerald-500/30"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex justify-center"
               >
-                <motion.span
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 0.5, repeat: 2 }}
-                >
-                  🎉
-                </motion.span>
-                Richtig!
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold shadow-lg shadow-red-500/30"
-              >
-                <motion.span
-                  animate={{ x: [0, -5, 5, -5, 5, 0] }}
-                  transition={{ duration: 0.4 }}
-                >
-                  😢
-                </motion.span>
-                Leider falsch
+                {options[selectedAnswer!]?.id === currentCard?.id ? (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold shadow-lg shadow-emerald-500/30"
+                  >
+                    <motion.span
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 0.5, repeat: 2 }}
+                    >
+                      🎉
+                    </motion.span>
+                    Richtig! +{XP_REWARDS.correctQuizAnswer} XP
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold shadow-lg shadow-red-500/30"
+                  >
+                    <motion.span
+                      animate={{ x: [0, -5, 5, -5, 5, 0] }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      😢
+                    </motion.span>
+                    Leider falsch
+                  </motion.div>
+                )}
               </motion.div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </AnimatePresence>
 
-      {showResult && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Button onClick={nextQuestion} size="lg" className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg shadow-pink-500/30">
-            {currentIndex >= quizCards.length - 1 ? 'Ergebnis anzeigen' : 'Nächste Frage'}
-          </Button>
-        </motion.div>
-      )}
+          {showResult && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Button onClick={nextQuestion} size="lg" className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg shadow-pink-500/30">
+                {currentIndex >= quizCards.length - 1 ? 'Ergebnis' : 'Nächste Frage'}
+              </Button>
+            </motion.div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -1003,13 +1633,14 @@ function QuizMode({ vocabulary, loading, level }: { vocabulary: VocabularyCard[]
 // ============================================
 // SENTENCE COMPLETION MODE
 // ============================================
-function SentenceMode({ level }: { level: Level }) {
+function SentenceMode({ level, onXP }: { level: Level; onXP: (correct: number) => void }) {
   const exercises = useMemo(() => sentenceExercises.filter(e => e.level === level), [level]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [complete, setComplete] = useState(false);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
 
   // Component resets automatically when level changes via key prop in parent
 
@@ -1021,12 +1652,15 @@ function SentenceMode({ level }: { level: Level }) {
     setShowResult(true);
     if (current.options[index] === current.correctAnswer) {
       setScore(prev => prev + 1);
+      setSessionCorrect(prev => prev + 1);
     }
   };
 
   const nextQuestion = () => {
     if (currentIndex >= exercises.length - 1) {
       setComplete(true);
+      // Award XP at the end
+      onXP(sessionCorrect);
     } else {
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -1040,6 +1674,7 @@ function SentenceMode({ level }: { level: Level }) {
     setShowResult(false);
     setScore(0);
     setComplete(false);
+    setSessionCorrect(0);
   };
 
   if (exercises.length === 0) {
@@ -1062,7 +1697,11 @@ function SentenceMode({ level }: { level: Level }) {
             <span className="text-3xl font-bold text-white">{percentage}%</span>
           </div>
           <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">Übung abgeschlossen!</h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-6">Du hast {score} von {exercises.length} Sätzen richtig ergänzt.</p>
+          <p className="text-slate-600 dark:text-slate-300 mb-4">Du hast {score} von {exercises.length} Sätzen richtig ergänzt.</p>
+          <div className="flex items-center justify-center gap-2 mb-6 text-lg">
+            <span className="text-2xl">⭐</span>
+            <span className="font-bold text-orange-500">+{score * XP_REWARDS.correctSentence} XP</span>
+          </div>
           <Button onClick={restart} size="lg" className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white">Nochmal üben</Button>
         </CardContent>
       </Card>
@@ -1142,7 +1781,7 @@ function SentenceMode({ level }: { level: Level }) {
                     >
                       🎉
                     </motion.span>
-                    Richtig!
+                    Richtig! +{XP_REWARDS.correctSentence} XP
                   </motion.div>
                 ) : (
                   <motion.div
@@ -1193,7 +1832,7 @@ function SentenceMode({ level }: { level: Level }) {
 // ============================================
 // STORY MODE
 // ============================================
-function StoryMode({ level }: { level: Level }) {
+function StoryMode({ level, onXP }: { level: Level; onXP: (correct: number, total: number, completed: boolean) => void }) {
   const availableStories = useMemo(() => stories.filter(s => s.level === level), [level]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -1203,6 +1842,8 @@ function StoryMode({ level }: { level: Level }) {
   const [complete, setComplete] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
+  const [sessionTotal, setSessionTotal] = useState(0);
 
   // Component resets automatically when level changes via key prop in parent
 
@@ -1231,8 +1872,10 @@ function StoryMode({ level }: { level: Level }) {
     if (showResult || !selectedStory) return;
     setSelectedAnswer(index);
     setShowResult(true);
+    setSessionTotal(prev => prev + 1);
     if (index === selectedStory.questions[currentQuestion].correctAnswer) {
       setScore(prev => prev + 1);
+      setSessionCorrect(prev => prev + 1);
     }
   };
 
@@ -1240,6 +1883,8 @@ function StoryMode({ level }: { level: Level }) {
     if (!selectedStory) return;
     if (currentQuestion >= selectedStory.questions.length - 1) {
       setComplete(true);
+      // Award XP at end
+      onXP(sessionCorrect, sessionTotal, true);
     } else {
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer(null);
@@ -1260,6 +1905,8 @@ function StoryMode({ level }: { level: Level }) {
     setComplete(false);
     setIsPlaying(false);
     setAudioError(null);
+    setSessionCorrect(0);
+    setSessionTotal(0);
   };
 
   const resetStory = () => {
@@ -1442,7 +2089,7 @@ function StoryMode({ level }: { level: Level }) {
                       >
                         🎉
                       </motion.span>
-                      Richtig!
+                      Richtig! +{XP_REWARDS.correctStoryQuestion} XP
                     </motion.div>
                   ) : (
                     <motion.div
@@ -1482,6 +2129,7 @@ function StoryMode({ level }: { level: Level }) {
 
   // Results
   const percentage = Math.round((score / selectedStory.questions.length) * 100);
+  const totalXP = score * XP_REWARDS.correctStoryQuestion + XP_REWARDS.completeStory;
   return (
     <Card className="max-w-lg mx-auto border-0 bg-gradient-to-br from-blue-100 via-cyan-100 to-teal-100 dark:from-blue-900/30 dark:via-cyan-900/30 dark:to-teal-900/30 shadow-2xl">
       <CardContent className="py-12 text-center">
@@ -1489,7 +2137,11 @@ function StoryMode({ level }: { level: Level }) {
           <span className="text-3xl font-bold text-white">{percentage}%</span>
         </div>
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Geschichte abgeschlossen!</h2>
-        <p className="text-slate-600 dark:text-slate-300 mb-6">Du hast {score} von {selectedStory.questions.length} Fragen richtig beantwortet.</p>
+        <p className="text-slate-600 dark:text-slate-300 mb-4">Du hast {score} von {selectedStory.questions.length} Fragen richtig beantwortet.</p>
+        <div className="flex items-center justify-center gap-2 mb-6 text-lg">
+          <span className="text-2xl">⭐</span>
+          <span className="font-bold text-orange-500">+{totalXP} XP</span>
+        </div>
         <div className="flex gap-3 justify-center">
           <Button variant="outline" onClick={resetStory} className="rounded-xl">Andere Geschichte</Button>
           <Button onClick={() => startStory(selectedStory)} className="rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white">Nochmal lesen</Button>
