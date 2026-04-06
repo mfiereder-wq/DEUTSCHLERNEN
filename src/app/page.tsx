@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DailyLearning } from '@/components/daily-learning';
 import { PronunciationPractice } from '@/components/pronunciation-practice';
@@ -14,15 +13,8 @@ import { PWAInfoCard } from '@/components/pwa-install';
 import { SentenceCompletion } from '@/components/sentence-completion';
 import { QuizGame } from '@/components/quiz-game';
 import { LevelMap } from '@/components/level-map';
+import { UserProfile } from '@/components/user-profile';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
-
-// Mock user progress
-const MOCK_USER = {
-  level: 1,
-  xp: 250,
-  streak: 3,
-  wordsLearned: 15,
-};
 
 // Sample words for pronunciation practice
 const PRACTICE_WORDS: ExtendedVocabWord[] = [
@@ -75,7 +67,7 @@ const PRACTICE_WORDS: ExtendedVocabWord[] = [
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState('learn');
+  const [activeTab, setActiveTab] = useState('profile');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
 
   useEffect(() => {
@@ -100,11 +92,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background noise-texture">
-      {/* Header - Mobile optimized */}
+      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
           <div className="flex h-14 sm:h-16 items-center justify-between">
-            {/* Logo - smaller on mobile */}
+            {/* Logo */}
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -135,13 +127,20 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content - Full width on mobile */}
+      {/* Main Content */}
       <main className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Tab Navigation - Mobile optimized with horizontal scroll */}
+          {/* Tab Navigation */}
           <div className="sticky top-14 sm:top-16 z-40 border-b border-border bg-background/95 backdrop-blur-md overflow-x-auto">
             <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8 min-w-max">
               <TabsList className="inline-flex h-12 rounded-none bg-transparent p-0">
+                <TabsTrigger 
+                  value="profile" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
+                >
+                  <UserCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Profil</span>
+                </TabsTrigger>
                 <TabsTrigger 
                   value="learn" 
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
@@ -154,17 +153,15 @@ export default function Home() {
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium">Aussprache</span>
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Aussprache</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Audio</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="sentences" 
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <Puzzle className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium">
-                    <span className="hidden sm:inline">Sätze</span>
-                    <span className="sm:hidden">Satz</span>
-                  </span>
+                  <span className="text-xs sm:text-sm font-medium">Sätze</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="quiz" 
@@ -185,46 +182,38 @@ export default function Home() {
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Einstellungen</span>
-                  <span className="text-xs sm:text-sm font-medium sm:hidden">Mehr</span>
+                  <span className="text-xs sm:text-sm font-medium">Mehr</span>
                 </TabsTrigger>
               </TabsList>
             </div>
           </div>
 
-          {/* Tab Content - Full width on mobile */}
+          {/* Tab Content */}
           <div className="w-full">
+            {/* Profile Tab - NEW! */}
+            <TabsContent value="profile" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <UserProfile />
+            </TabsContent>
+
             {/* Learn Tab */}
             <TabsContent value="learn" className="mt-0 w-full">
-              <DailyLearning userLevel={MOCK_USER.level} />
+              <DailyLearning userLevel={1} />
             </TabsContent>
 
             {/* Pronunciation Tab */}
             <TabsContent value="pronunciation" className="mt-0 w-full px-3 sm:px-4 py-4">
               <div className="mx-auto max-w-2xl space-y-4">
-                {/* Navigation for practice words */}
                 <div className="flex items-center justify-between gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handlePrevPractice}
-                    className="text-xs sm:text-sm"
-                  >
+                  <Button variant="outline" size="sm" onClick={handlePrevPractice} className="text-xs sm:text-sm">
                     ← Vorherige
                   </Button>
                   <span className="text-xs sm:text-sm text-muted-foreground">
                     {currentPracticeIndex + 1} / {PRACTICE_WORDS.length}
                   </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleNextPractice}
-                    className="text-xs sm:text-sm"
-                  >
+                  <Button variant="outline" size="sm" onClick={handleNextPractice} className="text-xs sm:text-sm">
                     Nächste →
                   </Button>
                 </div>
-                
                 <PronunciationPractice 
                   word={PRACTICE_WORDS[currentPracticeIndex]} 
                   onNext={handleNextPractice}
@@ -245,7 +234,7 @@ export default function Home() {
 
             {/* Levels Tab */}
             <TabsContent value="levels" className="mt-0 w-full px-3 sm:px-4 py-4">
-              <LevelMap currentXP={MOCK_USER.xp} onSelectLevel={(level) => console.log('Selected level:', level)} />
+              <LevelMap currentXP={150} onSelectLevel={(level) => console.log('Selected:', level)} />
             </TabsContent>
 
             {/* Settings Tab */}
@@ -259,7 +248,7 @@ export default function Home() {
         </Tabs>
       </main>
 
-      {/* Footer - Mobile optimized */}
+      {/* Footer */}
       <footer className="border-t border-border py-4 sm:py-6 text-center">
         <p className="text-xs sm:text-sm text-muted-foreground px-4">
           DEUTSCHLERNEN - Lerne Deutsch jeden Tag
