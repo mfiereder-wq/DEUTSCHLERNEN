@@ -11,14 +11,24 @@ import { DailyLearning } from '@/components/daily-learning';
 import { PronunciationPractice } from '@/components/pronunciation-practice';
 import { SyncManagerCard } from '@/components/sync-manager';
 import { PWAInfoCard } from '@/components/pwa-install';
-import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 
-// Mock user progress - in real app this would come from backend/localStorage
+// Mock user progress
 const MOCK_USER = {
   level: 1,
   xp: 0,
   streak: 0,
   wordsLearned: 0,
+};
+
+// Sample word for pronunciation practice
+const SAMPLE_WORD = {
+  id: 'sample-1',
+  german: 'Guten Morgen',
+  english: 'Good morning',
+  category: 'Alltag',
+  difficulty: 'A1' as const,
+  tags: ['greeting', 'morning'],
+  exampleSentence: 'Guten Morgen! Wie geht es dir?',
 };
 
 export default function Home() {
@@ -115,17 +125,7 @@ export default function Home() {
             {/* Pronunciation Tab */}
             <TabsContent value="pronunciation" className="mt-0">
               <div className="mx-auto max-w-2xl">
-                <PronunciationPractice 
-                  word={{
-                    id: 'sample-1',
-                    german: 'Guten Morgen',
-                    english: 'Good morning',
-                    category: 'Alltag',
-                    difficulty: 'A1',
-                    tags: ['greeting', 'morning'],
-                    exampleSentence: 'Guten Morgen! Wie geht es dir?',
-                  }}
-                />
+                <PronunciationPractice word={SAMPLE_WORD} />
               </div>
             </TabsContent>
 
