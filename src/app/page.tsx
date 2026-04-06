@@ -41,7 +41,7 @@ export default function Home() {
 
   if (!mounted) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
       </div>
     );
@@ -50,9 +50,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background noise-texture">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-md">
-        <div className="mx-auto max-w-7xl px-4 py-4">
-          <div className="flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
@@ -63,9 +63,8 @@ export default function Home() {
                 <BookOpen className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="font-display text-xl tracking-tight">
-                  <span className="text-gradient-gold">DEUTSCH</span>
-                  <span className="text-muted-foreground">LERNEN</span>
+                <h1 className="font-display text-xl tracking-tight text-gradient-gold">
+                  DEUTSCHLERNEN
                 </h1>
               </div>
             </motion.div>
@@ -86,28 +85,28 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Tab Navigation */}
           <div className="mb-6 flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3 rounded-xl bg-muted/50 p-1">
+            <TabsList className="grid w-full max-w-md grid-cols-3 rounded-xl bg-muted p-1">
               <TabsTrigger 
                 value="learn" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 <GraduationCap className="h-4 w-4" />
                 <span className="hidden sm:inline">Lernen</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="pronunciation" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 <BookOpen className="h-4 w-4" />
                 <span className="hidden sm:inline">Aussprache</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="settings" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 <Settings className="h-4 w-4" />
                 <span className="hidden sm:inline">Einstellungen</span>
@@ -141,7 +140,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t py-6 text-center text-sm text-muted-foreground">
+      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
         <p>DEUTSCHLERNEN - Lerne Deutsch jeden Tag</p>
       </footer>
     </div>

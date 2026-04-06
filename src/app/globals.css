@@ -1,20 +1,23 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
-/* ============================================
-   DEUTSCHLERNEN - Germanic Editorial Design System
-   Warm, refined, distinctly German aesthetic
-   ============================================ */
-
-/* Import distinctive fonts */
-@import url('https://fonts.cdnfonts.com/css/clash-display');
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
-
-@theme inline {
+@theme {
+  /* Core colors */
   --color-background: #FAF8F5;
   --color-foreground: #1C2541;
+  
+  /* Germanic Color Palette */
+  --color-german-cream: #FAF8F5;
+  --color-german-ochre: #C9A86C;
+  --color-german-navy: #1C2541;
+  --color-german-amber: #D4A574;
+  --color-german-sage: #6B8E6B;
+  --color-german-rose: #B76E79;
+  --color-german-charcoal: #2D3142;
+  --color-german-paper: #FFFCF7;
+  --color-german-warm: #F5EDE4;
+  --color-german-gold: #B8860B;
+  
+  /* shadcn compatible variables */
   --color-card: #FFFCF7;
   --color-card-foreground: #1C2541;
   --color-popover: #FFFCF7;
@@ -32,149 +35,113 @@
   --color-input: #E8E0D5;
   --color-ring: #C9A86C;
   
-  /* Germanic Color Palette */
-  --color-german-cream: #FAF8F5;
-  --color-german-ochre: #C9A86C;
-  --color-german-navy: #1C2541;
-  --color-german-amber: #D4A574;
-  --color-german-sage: #6B8E6B;
-  --color-german-rose: #B76E79;
-  --color-german-charcoal: #2D3142;
-  --color-german-paper: #FFFCF7;
-  --color-german-warm: #F5EDE4;
-  --color-german-gold: #B8860B;
-  
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Crimson Pro', Georgia, serif;
+  --font-display: 'Clash Display', 'Crimson Pro', sans-serif;
 }
 
-:root {
-  /* Light theme - Germanic warm palette */
-  --background: #FAF8F5;
-  --foreground: #1C2541;
-  --card: #FFFCF7;
-  --card-foreground: #1C2541;
-  --popover: #FFFCF7;
-  --popover-foreground: #1C2541;
-  --primary: #C9A86C;
-  --primary-foreground: #1C2541;
-  --secondary: #F5EDE4;
-  --secondary-foreground: #1C2541;
-  --muted: #E8E0D5;
-  --muted-foreground: #5C5F6B;
-  --accent: #B76E79;
-  --accent-foreground: #FFFCF7;
-  --destructive: #E07878;
-  --border: #E8E0D5;
-  --input: #E8E0D5;
-  --ring: #C9A86C;
-  --radius: 0.75rem;
-  
-  /* Custom semantic colors */
-  --success: #6B8E6B;
-  --warning: #D4A574;
-  --info: #5B7C99;
-}
-
-.dark {
-  /* Dark theme - Refined navy */
-  --background: #0F1419;
-  --foreground: #FAF8F5;
-  --card: #1C2541;
-  --card-foreground: #FAF8F5;
-  --popover: #1C2541;
-  --popover-foreground: #FAF8F5;
-  --primary: #D4A574;
-  --primary-foreground: #0F1419;
-  --secondary: #2D3142;
-  --secondary-foreground: #FAF8F5;
-  --muted: #3D4252;
-  --muted-foreground: #9CA3AF;
-  --accent: #E8A5AD;
-  --accent-foreground: #0F1419;
-  --destructive: #F87171;
-  --border: #3D4252;
-  --input: #3D4252;
-  --ring: #D4A574;
+/* Dark theme overrides */
+@theme {
+  .dark {
+    --color-background: #0F1419;
+    --color-foreground: #FAF8F5;
+    --color-card: #1C2541;
+    --color-card-foreground: #FAF8F5;
+    --color-popover: #1C2541;
+    --color-popover-foreground: #FAF8F5;
+    --color-primary: #D4A574;
+    --color-primary-foreground: #0F1419;
+    --color-secondary: #2D3142;
+    --color-secondary-foreground: #FAF8F5;
+    --color-muted: #3D4252;
+    --color-muted-foreground: #9CA3AF;
+    --color-accent: #E8A5AD;
+    --color-accent-foreground: #0F1419;
+    --color-destructive: #F87171;
+    --color-border: #3D4252;
+    --color-input: #3D4252;
+    --color-ring: #D4A574;
+    
+    --color-german-cream: #0F1419;
+    --color-german-ochre: #D4A574;
+    --color-german-paper: #1C2541;
+    --color-german-warm: #2D3142;
+  }
 }
 
 /* ============================================
-   Typography System
+   Fonts
    ============================================ */
-
-.font-display {
-  font-family: 'Clash Display', 'Crimson Pro', serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.font-body {
-  font-family: 'Crimson Pro', Georgia, serif;
-  font-weight: 400;
-  line-height: 1.65;
-}
-
-.headline-german {
-  font-family: 'Clash Display', serif;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.subheadline {
-  font-family: 'Crimson Pro', serif;
-  font-style: italic;
-  font-weight: 500;
-}
+@import url('https://fonts.cdnfonts.com/css/clash-display');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
 /* ============================================
    Base Styles
    ============================================ */
-
 @layer base {
   * {
-    border-color: var(--border);
+    border-color: var(--color-border);
   }
   
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
     font-family: 'Crimson Pro', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Clash Display', 'Crimson Pro', serif;
+    font-family: 'Clash Display', 'Crimson Pro', sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
   }
   
-  /* Selection color */
   ::selection {
     background-color: rgba(201, 168, 108, 0.3);
   }
 }
 
 /* ============================================
-   Custom Utilities
+   Typography Utilities
    ============================================ */
+.font-display {
+  font-family: 'Clash Display', 'Crimson Pro', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
 
+.font-body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  line-height: 1.65;
+}
+
+.headline-german {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* ============================================
+   Component Utilities
+   ============================================ */
 @layer utilities {
   /* Gradient backgrounds */
   .bg-gradient-german {
     background: linear-gradient(135deg, #FAF8F5 0%, #F5EDE4 50%, #EDE5DA 100%);
   }
   
-  .bg-gradient-warm {
-    background: linear-gradient(180deg, #FFFCF7 0%, #FAF6F0 100%);
+  .bg-gradient-navy {
+    background: linear-gradient(135deg, #1C2541 0%, #2D3142 100%);
   }
   
-  .bg-gradient-navy {
-    background: linear-gradient(135deg, #1C2541 0%, #2D3142 50%, #3D4252 100%);
+  .dark .bg-gradient-german {
+    background: linear-gradient(135deg, #0F1419 0%, #1C2541 100%);
   }
   
   /* Text gradients */
@@ -191,9 +158,22 @@
                 0 8px 40px -4px rgba(28, 37, 65, 0.1);
   }
   
-  .shadow-elevated {
-    box-shadow: 0 8px 32px -4px rgba(201, 168, 108, 0.2),
-                0 16px 64px -8px rgba(28, 37, 65, 0.15);
+  .dark .shadow-warm {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4),
+                0 8px 40px -4px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Button styles */
+  .btn-primary-german {
+    background: linear-gradient(135deg, #C9A86C 0%, #B8945C 100%);
+    color: #1C2541;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary-german:hover {
+    background: linear-gradient(135deg, #D1A060 0%, #C4A05C 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 168, 108, 0.3);
   }
   
   /* Noise texture */
@@ -209,123 +189,84 @@
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
-  
-  /* Card warm */
-  .card-warm {
-    background: linear-gradient(145deg, var(--card) 0%, var(--background) 100%);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
+}
+
+/* ============================================
+   Mobile Optimizations
+   ============================================ */
+@layer utilities {
+  /* Safe area for mobile */
+  .safe-padding {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
   
-  /* Quote style */
-  .quote-german {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    border-left: 3px solid var(--primary);
-    padding-left: 1.5rem;
+  /* Full width on mobile */
+  .mobile-full {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
-  /* Status badges */
-  .badge-new {
-    background: linear-gradient(135deg, #D4A574 0%, #C9A86C 100%);
-    color: #1C2541;
+  /* Container responsive */
+  .container-mobile {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
-  .badge-streak {
-    background: linear-gradient(135deg, #B76E79 0%, #9B5A65 100%);
-    color: #FFFCF7;
+  @media (min-width: 640px) {
+    .container-mobile {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
   
-  .badge-success {
-    background: linear-gradient(135deg, #6B8E6B 0%, #5A7A5A 100%);
-    color: #FFFCF7;
-  }
-  
-  /* Hover lift */
-  .hover-lift {
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.3s ease;
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-elevated);
-  }
-  
-  /* Button styles */
-  .btn-primary-german {
-    background: linear-gradient(135deg, var(--primary) 0%, #B8945C 100%);
-    color: var(--primary-foreground);
-    border: none;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-primary-german:hover {
-    background: linear-gradient(135deg, #D1A060 0%, #C4A05C 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(201, 168, 108, 0.3);
-  }
-  
-  /* Scrollbar */
-  .scrollbar-warm::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .scrollbar-warm::-webkit-scrollbar-track {
-    background: var(--muted);
-    border-radius: 4px;
-  }
-  
-  .scrollbar-warm::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 4px;
-  }
-  
-  .scrollbar-warm::-webkit-scrollbar-thumb:hover {
-    background: #B8945C;
+  @media (min-width: 1280px) {
+    .container-mobile {
+      max-width: 1280px;
+    }
   }
 }
 
 /* ============================================
-   Animation Utilities
+   Animations
    ============================================ */
-
-@layer utilities {
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-  
-  .animate-fade-in-up {
-    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  
-  .stagger-children > * {
+@keyframes fadeInUp {
+  from {
     opacity: 0;
-    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translateY(20px) scale(0.98);
   }
-  
-  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
-  
-  @keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 108, 0.4); }
-    50% { box-shadow: 0 0 20px 5px rgba(201, 168, 108, 0.2); }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
-  
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
-  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8945C;
 }
