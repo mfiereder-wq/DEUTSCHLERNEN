@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
@@ -9,23 +9,47 @@ import {
   Sparkles,
   Trophy,
   Flame,
-  ChevronRight,
   CheckCircle2,
-  Star
+  Star,
+  Circle,
+  TrendingUp,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useDynamicContent } from '@/hooks/use-dynamic-content';
-import { NewContentBanner, DailyThemeCard } from './new-content-banner';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
+import { WordList } from './word-card';
+import { cn } from '@/lib/utils';
 
 interface DailyLearningProps {
   userLevel: number;
   onComplete?: () => void;
+}
+
+// Error boundary wrapper
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<LoadingState />}>{children}</Suspense>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="space-y-6 py-8">
+      <div className="h-24 animate-shimmer rounded-2xl bg-muted" />
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-24 animate-shimmer rounded-xl bg-muted" />
+        ))}
+      </div>
+      <div className="h-96 animate-shimmer rounded-2xl bg-muted" />
+    </div>
+  );
 }
 
 export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
@@ -43,12 +67,20 @@ export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
 
   const [learnedToday, setLearnedToday] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('new');
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const handleLearnWord = (wordId: string) => {
     setLearnedToday(prev => {
       const newSet = new Set([...prev, wordId]);
       if (newSet.size > prev.length) {
         learnWords([wordId]);
+        
+        // Check for completion
+        const progress = (newSet.size / newWords.length) * 100;
+        if (progress === 100 && newWords.length > 0) {
+          setShowCelebration(true);
+          setTimeout(() => setShowCelebration(false), 3000);
+        }
       }
       return [...newSet];
     });
@@ -58,175 +90,340 @@ export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
     ? Math.round((learnedToday.length / newWords.length) * 100) 
     : 0;
 
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('de-DE', { 
+    weekday: 'long', 
+    day: 'numeric', 
+    month: 'long' 
+  });
+
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-24 animate-pulse rounded-xl bg-muted" />
-        <div className="h-64 animate-pulse rounded-xl bg-muted" />
-      </div>
-    );
+    return <LoadingState />;
   }
 
   return (
-    <div className="space-y-6">
-      {/* New Content Banner */}
-      <NewContentBanner 
-        userLevel={userLevel} 
-        onViewNewWords={() => setActiveTab('new')} 
-      />
+    <div className="relative min-h-screen pb-24">
+      {/* Celebration overlay */}
+      <AnimatePresence>
+        {showCelebration && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ rotate: [0, 360, 720] }}
+                transition={{ duration: 1.5 }}
+                className="mb-4"
+              >
+                <Trophy className="mx-auto h-20 w-20 text-[#C9A86C]" />
+              </motion.div>
+              <h3 className="font-display text-3xl mb-2">Tagesziel erreicht!</h3>
+              <p className="text-muted-foreground">
+                Perfekte Arbeit! Du hast alle heutigen Wörter gelernt.
+              </p>
+              {streakBonus.multiplier > 1 && (
+                <p className="mt-2 text-[#C9A86C] font-medium">
+                  +{Math.round(streakBonus.multiplier * 100)}% XP Bonus!
+                </p>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard
-          icon={<Flame className="h-5 w-5 text-orange-500" />}
-          label="Streak"
-          value={`${streak} Tage`}
-          subtext={streakBonus.message}
-        />
-        <StatCard
-          icon={<BookOpen className="h-5 w-5 text-blue-500" />}
-          label="Gelernt"
-          value={totalLearned.toString()}
-          subtext="Wörter"
-        />
-        <StatCard
-          icon={<Sparkles className="h-5 w-5 text-yellow-500" />}
-          label="Neu heute"
-          value={newWords.length.toString()}
-          subtext="Verfügbar"
-        />
-        <StatCard
-          icon={<Trophy className="h-5 w-5 text-purple-500" />}
-          label="Fortschritt"
-          value={`${progress}%`}
-          subtext="Heute"
-        />
+      {/* Header */}
+      <div className="mb-8 space-y-6">
+        {/* Date & Title */}
+        <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-2 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+          >
+            <Calendar className="h-4 w-4" />
+            <span className="capitalize">{dateStr}</span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-display text-4xl sm:text-5xl mb-2"
+          >
+            <span className="text-gradient-gold">Tägliches Deutsch</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="subheadline text-lg text-muted-foreground"
+          >
+            Thema des Tages: {theme.name} {theme.icon}
+          </motion.p>
+        </div>
+
+        {/* Stats Grid */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-2 gap-4 sm:grid-cols-4 stagger-children"
+        >
+          <StatCard
+            icon={<Flame className="h-5 w-5" />}
+            iconColor="text-orange-500"
+            label="Streak"
+            value={`${streak}`}
+            subtext={streak > 0 ? 'Tage' : 'Starte heute!'}
+            trend={streak > 7 ? '+Hot!' : undefined}
+          />
+          <StatCard
+            icon={<BookOpen className="h-5 w-5" />}
+            iconColor="text-[#C9A86C]"
+            label="Gelernt"
+            value={totalLearned.toString()}
+            subtext="Wörter gesamt"
+          />
+          <StatCard
+            icon={<Sparkles className="h-5 w-5" />}
+            iconColor="text-amber-500"
+            label="Neu heute"
+            value={newWords.length.toString()}
+            subtext="Verfügbar"
+            highlight
+          />
+          <StatCard
+            icon={<TrendingUp className="h-5 w-5" />}
+            iconColor="text-emerald-500"
+            label="Fortschritt"
+            value={`${progress}%`}
+            subtext="Heute"
+            progress={progress}
+          />
+        </motion.div>
+
+        {/* Progress bar for today */}
+        {newWords.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="rounded-xl bg-muted/50 p-4"
+          >
+            <div className="mb-2 flex items-center justify-between text-sm">
+              <span className="font-medium">Tagesfortschritt</span>
+              <span className="text-muted-foreground">
+                {learnedToday.length} / {newWords.length} Wörter
+              </span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-muted">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-[#C9A86C] to-[#D4A574]"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Theme card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="overflow-hidden rounded-2xl border border-[#C9A86C]/20 bg-gradient-to-br from-[#FFFCF7] to-[#F5EDE4] p-6"
+        >
+          <div className="flex items-center gap-4">
+            <div 
+              className="flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-warm"
+              style={{ backgroundColor: theme.color }}
+            >
+              {theme.icon}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Heutiges Thema</p>
+              <h2 className="font-display text-2xl">{theme.name}</h2>
+              <p className="text-sm text-muted-foreground">
+                {themeWords.length} neue Vokabeln zu entdecken
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Daily Theme Card */}
-      <DailyThemeCard />
-
       {/* Learning Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <ScrollArea className="w-full whitespace-nowrap">
-          <TabsList className="inline-flex w-full justify-start bg-muted/50 p-1">
-            <TabsTrigger value="new" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              <span className="hidden sm:inline">Neue Wörter</span>
-              <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                {newWords.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="theme" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              <span className="hidden sm:inline">{theme.name}</span>
-              <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                {themeWords.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="review" className="flex items-center gap-2">
-              <RotateCcw className="h-4 w-4" />
-              <span className="hidden sm:inline">Wiederholen</span>
-              <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                {reviewWords.length}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <ScrollArea className="w-full whitespace-nowrap">
+            <TabsList className="inline-flex w-full justify-start rounded-xl bg-muted/50 p-1">
+              <TabsTrigger 
+                value="new" 
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Neue Wörter</span>
+                {newWords.length > 0 && (
+                  <span className="ml-1 rounded-full bg-[#C9A86C]/20 px-2 py-0.5 text-xs text-[#C9A86C]">
+                    {newWords.length}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="theme" 
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                {theme.icon}
+                <span className="hidden sm:inline">{theme.name}</span>
+                <span className="sm:hidden">Thema</span>
+                <span className="ml-1 rounded-full bg-[#C9A86C]/20 px-2 py-0.5 text-xs text-[#C9A86C]">
+                  {themeWords.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="review" 
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <RotateCcw className="h-4 w-4" />
+                <span>Wiederholen</span>
+                {reviewWords.length > 0 && (
+                  <span className="ml-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
+                    {reviewWords.length}
+                  </span>
+                )}
+              </TabsTrigger>
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
 
-        {/* New Words Tab */}
-        <TabsContent value="new" className="mt-4 space-y-4">
-          {progress > 0 && (
-            <div className="mb-4">
-              <div className="mb-2 flex items-center justify-between text-sm">
-                <span>Tagesziel</span>
-                <span className="font-medium">{learnedToday.length} / {newWords.length}</span>
+          {/* New Words Tab */}
+          <TabsContent value="new" className="mt-6">
+            {newWords.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-xl">Heute zu lernen</h3>
+                  {learnedToday.length > 0 && (
+                    <Badge variant="outline" className="border-emerald-200 text-emerald-700">
+                      <CheckCircle2 className="mr-1 h-3 w-3" />
+                      {learnedToday.length} gelernt
+                    </Badge>
+                  )}
+                </div>
+                <WordList 
+                  words={newWords}
+                  learnedIds={learnedToday}
+                  onLearn={handleLearnWord}
+                  variant="default"
+                />
               </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-          )}
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {newWords.map((word, index) => (
-              <WordCard
-                key={word.id}
-                word={word}
-                index={index}
-                isLearned={learnedToday.includes(word.id)}
-                onLearn={() => handleLearnWord(word.id)}
+            ) : (
+              <EmptyState
+                icon={<CheckCircle2 className="h-16 w-16 text-emerald-500" />}
+                title="Alles gelernt!"
+                description="Du hast alle heutigen Wörter gelernt. Komm morgen für neue zurück!"
               />
-            ))}
-          </div>
+            )}
+          </TabsContent>
 
-          {newWords.length === 0 && (
-            <EmptyState
-              icon={<CheckCircle2 className="h-12 w-12 text-green-500" />}
-              title="Alles gelernt!"
-              description="Du hast alle heutigen Wörter gelernt. Komm morgen für neue zurück!"
-            />
-          )}
-        </TabsContent>
-
-        {/* Theme Words Tab */}
-        <TabsContent value="theme" className="mt-4 space-y-4">
-          <div 
-            className="mb-4 rounded-lg p-4"
-            style={{ backgroundColor: `${theme.color}15` }}
-          >
-            <h3 className="font-semibold">Thema: {theme.name} {theme.icon}</h3>
-            <p className="text-sm text-muted-foreground">
-              Spezialisierte Vokabeln zum heutigen Thema
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {themeWords.slice(0, 12).map((word, index) => (
-              <WordCard
-                key={word.id}
-                word={word}
-                index={index}
-                isLearned={learnedToday.includes(word.id)}
-                onLearn={() => handleLearnWord(word.id)}
-                showDifficulty
+          {/* Theme Tab */}
+          <TabsContent value="theme" className="mt-6">
+            {themeWords.length > 0 ? (
+              <div className="space-y-4">
+                <div 
+                  className="rounded-xl p-4"
+                  style={{ backgroundColor: `${theme.color}15` }}
+                >
+                  <h3 className="font-display text-xl" style={{ color: theme.color }}>
+                    {theme.name} Thema
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Spezialisierte Vokabeln zum heutigen Thema entdecken
+                  </p>
+                </div>
+                <WordList 
+                  words={themeWords.slice(0, 12)}
+                  learnedIds={learnedToday}
+                  onLearn={handleLearnWord}
+                  variant="compact"
+                />
+              </div>
+            ) : (
+              <EmptyState
+                icon={<Circle className="h-16 w-16 text-muted-foreground" />}
+                title="Keine Themenwörter"
+                description="Lade die App neu, um neue Vokabeln zu erhalten."
               />
-            ))}
-          </div>
-        </TabsContent>
+            )}
+          </TabsContent>
 
-        {/* Review Tab */}
-        <TabsContent value="review" className="mt-4 space-y-4">
-          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:bg-amber-950/20">
-            <h3 className="font-semibold text-amber-800 dark:text-amber-200">
-              Zeit für Wiederholung
-            </h3>
-            <p className="text-sm text-amber-700 dark:text-amber-300">
-              Diese Wörter hast du schon gelernt - lass sie uns auffrischen!
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {reviewWords.map((word, index) => (
-              <WordCard
-                key={word.id}
-                word={{ ...word, isNew: false }}
-                index={index}
-                isLearned={learnedToday.includes(word.id)}
-                onLearn={() => handleLearnWord(word.id)}
-                isReview
+          {/* Review Tab */}
+          <TabsContent value="review" className="mt-6">
+            {reviewWords.length > 0 ? (
+              <div className="space-y-4">
+                <div className="rounded-xl border border-[#C9A86C]/20 bg-[#C9A86C]/5 p-4">
+                  <h3 className="font-display text-xl mb-2">
+                    Zeit für Wiederholung
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Diese Wörter hast du schon gelernt - lass sie uns auffrischen!
+                  </p>
+                </div>
+                <WordList 
+                  words={reviewWords}
+                  learnedIds={learnedToday}
+                  onLearn={handleLearnWord}
+                  variant="compact"
+                />
+              </div>
+            ) : (
+              <EmptyState
+                icon={<Star className="h-16 w-16 text-[#C9A86C]" />}
+                title="Gute Arbeit!"
+                description="Keine Wiederholungen nötig. Du hast alles im Griff!"
               />
-            ))}
-          </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </motion.div>
 
-          {reviewWords.length === 0 && (
-            <EmptyState
-              icon={<Star className="h-12 w-12 text-amber-500" />}
-              title="Gute Arbeit!"
-              description="Keine Wiederholungen nötig. Du hast alles im Griff!"
-            />
-          )}
-        </TabsContent>
-      </Tabs>
+      {/* Floating action button for mobile */}
+      {progress < 100 && newWords.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-24 right-4 z-40 sm:hidden"
+        >
+          <div className="flex flex-col items-end gap-2">
+            {streakBonus.multiplier > 1 && (
+              <span className="rounded-full bg-gradient-to-r from-[#C9A86C] to-[#D4A574] px-3 py-1 text-xs font-medium text-white shadow-lg">
+                {streakBonus.message}
+              </span>
+            )}
+            <Button
+              size="lg"
+              className="btn-primary-german h-14 w-14 rounded-full shadow-elevated"
+              onClick={() => {
+                const nextWord = newWords.find(w => !learnedToday.includes(w.id));
+                if (nextWord) {
+                  document.getElementById(`word-${nextWord.id}`)?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              <GraduationCap className="h-6 w-6" />
+            </Button>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -234,136 +431,64 @@ export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
 // Stat Card Component
 function StatCard({ 
   icon, 
+  iconColor,
   label, 
   value, 
-  subtext 
+  subtext,
+  highlight,
+  progress,
+  trend,
 }: { 
   icon: React.ReactNode; 
+  iconColor: string;
   label: string; 
   value: string; 
   subtext?: string;
+  highlight?: boolean;
+  progress?: number;
+  trend?: string;
 }) {
   return (
-    <Card className="transition-all hover:shadow-md">
+    <Card className={cn(
+      'relative overflow-hidden transition-all hover:shadow-warm',
+      highlight && 'border-[#C9A86C]/30'
+    )}>
+      <div className={cn(
+        'absolute left-0 top-0 h-full w-1',
+        iconColor.replace('text', 'bg')
+      )} />
       <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-muted-foreground">{label}</p>
+            <p className="font-display text-2xl">{value}</p>
+          </div>
+          <div className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-muted', iconColor)}>
             {icon}
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-lg font-bold leading-tight">{value}</p>
-            {subtext && (
-              <p className="truncate text-xs text-muted-foreground">{subtext}</p>
-            )}
-          </div>
         </div>
+        {progress !== undefined && progress > 0 && (
+          <div className="mt-2">
+            <div className="h-1 overflow-hidden rounded-full bg-muted">
+              <motion.div 
+                className={cn('h-full', iconColor.replace('text', 'bg'))}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
+        )}
+        {subtext && (
+          <p className="mt-2 text-xs text-muted-foreground">{subtext}</p>
+        )}
+        {trend && (
+          <Badge variant="secondary" className="mt-2 text-xs">
+            {trend}
+          </Badge>
+        )}
       </CardContent>
     </Card>
-  );
-}
-
-// Word Card Component
-function WordCard({
-  word,
-  index,
-  isLearned,
-  onLearn,
-  showDifficulty = false,
-  isReview = false,
-}: {
-  word: ExtendedVocabWord;
-  index: number;
-  isLearned: boolean;
-  onLearn: () => void;
-  showDifficulty?: boolean;
-  isReview?: boolean;
-}) {
-  const difficultyColor = {
-    A1: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    A2: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
-    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    B2: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100',
-    C1: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
-  }[word.difficulty];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-    >
-      <Card className={`group relative transition-all hover:shadow-lg ${
-        isLearned ? 'border-green-500/50 bg-green-500/5' : ''
-      }`}>
-        <CardContent className="p-4">
-          {/* Markers */}
-          <div className="absolute right-3 top-3 flex gap-1">
-            {word.isNew && !isReview && (
-              <Badge className="bg-[#fbbf24] text-xs text-black hover:bg-[#fbbf24]">
-                NEU
-              </Badge>
-            )}
-            {isReview && (
-              <Badge variant="secondary" className="text-xs">
-                <RotateCcw className="mr-1 h-3 w-3" />
-                Review
-              </Badge>
-            )}
-            {showDifficulty && (
-              <Badge className={`text-xs ${difficultyColor}`}>
-                {word.difficulty}
-              </Badge>
-            )}
-          </div>
-
-          {/* Word Content */}
-          <div className="pt-2">
-            <h4 className="text-lg font-bold">{word.german}</h4>
-            <p className="text-sm text-muted-foreground">{word.english}</p>
-            
-            {word.exampleSentence && (
-              <p className="mt-2 text-xs italic text-muted-foreground">
-                &quot;{word.exampleSentence}&quot;
-              </p>
-            )}
-
-            {/* Tags */}
-            <div className="mt-3 flex flex-wrap gap-1">
-              {word.tags.slice(0, 2).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Learn Button */}
-            <Button
-              size="sm"
-              variant={isLearned ? "outline" : "default"}
-              onClick={onLearn}
-              className={`mt-4 w-full transition-all ${
-                isLearned 
-                  ? 'border-green-500 text-green-600 hover:bg-green-50' 
-                  : ''
-              }`}
-            >
-              {isLearned ? (
-                <>
-                  <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Gelernt
-                </>
-              ) : (
-                <>
-                  <GraduationCap className="mr-2 h-4 w-4" />
-                  Lernen
-                </>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
   );
 }
 
@@ -378,12 +503,16 @@ function EmptyState({
   description: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="mb-4">
-        {icon}
-      </div>
-      <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-muted-foreground/25 bg-muted/25 p-8 text-center"
+    >
+      <div className="mb-4">{icon}</div>
+      <h3 className="font-display text-xl mb-2">{title}</h3>
       <p className="max-w-sm text-sm text-muted-foreground">{description}</p>
-    </div>
+    </motion.div>
   );
 }
+
+export default DailyLearning;
