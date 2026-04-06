@@ -1,11 +1,42 @@
 @import "tailwindcss";
 
+/* ============================================
+   Fonts
+   ============================================ */
+@import url('https://fonts.cdnfonts.com/css/clash-display');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+/* ============================================
+   Theme Variables - Tailwind v4 Syntax
+   ============================================ */
 @theme {
-  /* Core colors */
+  /* Light theme colors */
   --color-background: #FAF8F5;
   --color-foreground: #1C2541;
   
-  /* Germanic Color Palette */
+  --color-card: #FFFCF7;
+  --color-card-foreground: #1C2541;
+  --color-popover: #FFFCF7;
+  --color-popover-foreground: #1C2541;
+  
+  --color-primary: #C9A86C;
+  --color-primary-foreground: #1C2541;
+  
+  --color-secondary: #F5EDE4;
+  --color-secondary-foreground: #1C2541;
+  
+  --color-muted: #E8E0D5;
+  --color-muted-foreground: #5C5F6B;
+  
+  --color-accent: #B76E79;
+  --color-accent-foreground: #FFFCF7;
+  
+  --color-destructive: #E07878;
+  --color-border: #E8E0D5;
+  --color-input: #E8E0D5;
+  --color-ring: #C9A86C;
+  
+  /* Germanic palette */
   --color-german-cream: #FAF8F5;
   --color-german-ochre: #C9A86C;
   --color-german-navy: #1C2541;
@@ -17,79 +48,80 @@
   --color-german-warm: #F5EDE4;
   --color-german-gold: #B8860B;
   
-  /* shadcn compatible variables */
-  --color-card: #FFFCF7;
-  --color-card-foreground: #1C2541;
-  --color-popover: #FFFCF7;
-  --color-popover-foreground: #1C2541;
-  --color-primary: #C9A86C;
-  --color-primary-foreground: #1C2541;
-  --color-secondary: #F5EDE4;
-  --color-secondary-foreground: #1C2541;
-  --color-muted: #E8E0D5;
-  --color-muted-foreground: #5C5F6B;
-  --color-accent: #B76E79;
-  --color-accent-foreground: #FFFCF7;
-  --color-destructive: #E07878;
-  --color-border: #E8E0D5;
-  --color-input: #E8E0D5;
-  --color-ring: #C9A86C;
-  
+  /* Border radius */
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
-  
-  --font-sans: 'Crimson Pro', Georgia, serif;
-  --font-display: 'Clash Display', 'Crimson Pro', sans-serif;
-}
-
-/* Dark theme overrides */
-@theme {
-  .dark {
-    --color-background: #0F1419;
-    --color-foreground: #FAF8F5;
-    --color-card: #1C2541;
-    --color-card-foreground: #FAF8F5;
-    --color-popover: #1C2541;
-    --color-popover-foreground: #FAF8F5;
-    --color-primary: #D4A574;
-    --color-primary-foreground: #0F1419;
-    --color-secondary: #2D3142;
-    --color-secondary-foreground: #FAF8F5;
-    --color-muted: #3D4252;
-    --color-muted-foreground: #9CA3AF;
-    --color-accent: #E8A5AD;
-    --color-accent-foreground: #0F1419;
-    --color-destructive: #F87171;
-    --color-border: #3D4252;
-    --color-input: #3D4252;
-    --color-ring: #D4A574;
-    
-    --color-german-cream: #0F1419;
-    --color-german-ochre: #D4A574;
-    --color-german-paper: #1C2541;
-    --color-german-warm: #2D3142;
-  }
 }
 
 /* ============================================
-   Fonts
+   Root Variables for Theme Switching
    ============================================ */
-@import url('https://fonts.cdnfonts.com/css/clash-display');
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+:root {
+  --background: #FAF8F5;
+  --foreground: #1C2541;
+  --card: #FFFCF7;
+  --card-foreground: #1C2541;
+  --popover: #FFFCF7;
+  --popover-foreground: #1C2541;
+  --primary: #C9A86C;
+  --primary-foreground: #1C2541;
+  --secondary: #F5EDE4;
+  --secondary-foreground: #1C2541;
+  --muted: #E8E0D5;
+  --muted-foreground: #5C5F6B;
+  --accent: #B76E79;
+  --accent-foreground: #FFFCF7;
+  --destructive: #E07878;
+  --border: #E8E0D5;
+  --input: #E8E0D5;
+  --ring: #C9A86C;
+  --radius: 0.75rem;
+  
+  --german-cream: #FAF8F5;
+  --german-navy: #1C2541;
+  --german-paper: #FFFCF7;
+  --german-warm: #F5EDE4;
+}
+
+/* Dark mode using standard CSS - works with class="dark" on html */
+.dark {
+  --background: #0F1419;
+  --foreground: #FAF8F5;
+  --card: #1C2541;
+  --card-foreground: #FAF8F5;
+  --popover: #1C2541;
+  --popover-foreground: #FAF8F5;
+  --primary: #D4A574;
+  --primary-foreground: #0F1419;
+  --secondary: #2D3142;
+  --secondary-foreground: #FAF8F5;
+  --muted: #3D4252;
+  --muted-foreground: #9CA3AF;
+  --accent: #E8A5AD;
+  --accent-foreground: #0F1419;
+  --destructive: #F87171;
+  --border: #3D4252;
+  --input: #3D4252;
+  --ring: #D4A574;
+  
+  --german-cream: #0F1419;
+  --german-paper: #1C2541;
+  --german-warm: #2D3142;
+}
 
 /* ============================================
    Base Styles
    ============================================ */
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
   }
   
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: 'Crimson Pro', Georgia, serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -109,29 +141,40 @@
 /* ============================================
    Typography Utilities
    ============================================ */
-.font-display {
-  font-family: 'Clash Display', 'Crimson Pro', sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.font-body {
-  font-family: 'Crimson Pro', Georgia, serif;
-  line-height: 1.65;
-}
-
-.headline-german {
-  font-family: 'Clash Display', sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-/* ============================================
-   Component Utilities
-   ============================================ */
 @layer utilities {
-  /* Gradient backgrounds */
+  .font-display {
+    font-family: 'Clash Display', 'Crimson Pro', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  
+  .font-body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    line-height: 1.65;
+  }
+  
+  .headline-german {
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  
+  /* Text gradients */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #C9A86C 0%, #D4A574 50%, #B8860B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .dark .text-gradient-gold {
+    background: linear-gradient(135deg, #D4A574 0%, #E8C99C 50%, #D4A574 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  /* Gradients */
   .bg-gradient-german {
     background: linear-gradient(135deg, #FAF8F5 0%, #F5EDE4 50%, #EDE5DA 100%);
   }
@@ -144,15 +187,7 @@
     background: linear-gradient(135deg, #0F1419 0%, #1C2541 100%);
   }
   
-  /* Text gradients */
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #C9A86C 0%, #D4A574 50%, #B8860B 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  /* Warm shadows */
+  /* Shadows */
   .shadow-warm {
     box-shadow: 0 4px 20px -2px rgba(201, 168, 108, 0.15),
                 0 8px 40px -4px rgba(28, 37, 65, 0.1);
@@ -163,7 +198,7 @@
                 0 8px 40px -4px rgba(0, 0, 0, 0.3);
   }
   
-  /* Button styles */
+  /* Buttons */
   .btn-primary-german {
     background: linear-gradient(135deg, #C9A86C 0%, #B8945C 100%);
     color: #1C2541;
@@ -174,6 +209,11 @@
     background: linear-gradient(135deg, #D1A060 0%, #C4A05C 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(201, 168, 108, 0.3);
+  }
+  
+  .dark .btn-primary-german {
+    background: linear-gradient(135deg, #D4A574 0%, #C49A5C 100%);
+    color: #0F1419;
   }
   
   /* Noise texture */
@@ -189,27 +229,14 @@
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
-}
-
-/* ============================================
-   Mobile Optimizations
-   ============================================ */
-@layer utilities {
-  /* Safe area for mobile */
+  
+  /* Mobile optimizations */
   .safe-padding {
     padding-left: max(1rem, env(safe-area-inset-left));
     padding-right: max(1rem, env(safe-area-inset-right));
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
   
-  /* Full width on mobile */
-  .mobile-full {
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-  
-  /* Container responsive */
   .container-mobile {
     width: 100%;
     max-width: 100%;
@@ -234,6 +261,28 @@
 }
 
 /* ============================================
+   Scrollbar
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ring);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8945C;
+}
+
+/* ============================================
    Animations
    ============================================ */
 @keyframes fadeInUp {
@@ -251,22 +300,13 @@
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-muted);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #B8945C;
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

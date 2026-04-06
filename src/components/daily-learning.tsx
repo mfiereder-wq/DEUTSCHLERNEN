@@ -102,7 +102,7 @@ export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
   }
 
   return (
-    <div className="relative min-h-screen pb-24">
+    <div className="relative w-full px-4 sm:px-0 pb-8">
       {/* Celebration overlay */}
       <AnimatePresence>
         {showCelebration && (

@@ -58,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning className="antialiased">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -67,6 +67,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="DEUTSCHLERNEN" />
         <meta name="msapplication-starturl" content="/" />
         <meta name="msapplication-TileColor" content="#fbbf24" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <ThemeProvider 
