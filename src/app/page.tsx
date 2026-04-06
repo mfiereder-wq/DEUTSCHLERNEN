@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User, Menu } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,8 @@ import { DailyLearning } from '@/components/daily-learning';
 import { PronunciationPractice } from '@/components/pronunciation-practice';
 import { SyncManagerCard } from '@/components/sync-manager';
 import { PWAInfoCard } from '@/components/pwa-install';
+import { SentenceCompletion } from '@/components/sentence-completion';
+import { QuizGame } from '@/components/quiz-game';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 
 // Mock user progress
@@ -135,31 +137,48 @@ export default function Home() {
       {/* Main Content - Full width on mobile */}
       <main className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Tab Navigation - Mobile optimized */}
-          <div className="sticky top-14 sm:top-16 z-40 border-b border-border bg-background/95 backdrop-blur-md">
-            <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-              <TabsList className="grid w-full grid-cols-3 rounded-none bg-transparent p-0 h-12">
+          {/* Tab Navigation - Mobile optimized with horizontal scroll */}
+          <div className="sticky top-14 sm:top-16 z-40 border-b border-border bg-background/95 backdrop-blur-md overflow-x-auto">
+            <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8 min-w-max">
+              <TabsList className="inline-flex h-12 rounded-none bg-transparent p-0">
                 <TabsTrigger 
                   value="learn" 
-                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="text-xs sm:text-sm font-medium">Lernen</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="pronunciation" 
-                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Aussprache</span>
-                  <span className="text-xs sm:text-sm font-medium sm:hidden">Übung</span>
+                  <span className="text-xs sm:text-sm font-medium">Aussprache</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="sentences" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
+                >
+                  <Puzzle className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">
+                    <span className="hidden sm:inline">Sätze</span>
+                    <span className="sm:hidden">Satz</span>
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="quiz" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
+                >
+                  <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Quiz</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="settings" 
-                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
                   <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium">Einstell.</span>
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Einstellungen</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Mehr</span>
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -204,6 +223,16 @@ export default function Home() {
                   hasNext={true}
                 />
               </div>
+            </TabsContent>
+
+            {/* Sentences Tab */}
+            <TabsContent value="sentences" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <SentenceCompletion />
+            </TabsContent>
+
+            {/* Quiz Tab */}
+            <TabsContent value="quiz" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <QuizGame />
             </TabsContent>
 
             {/* Settings Tab */}
