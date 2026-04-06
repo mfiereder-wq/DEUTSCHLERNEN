@@ -174,7 +174,7 @@ export function DailyLearning({ userLevel, onComplete }: DailyLearningProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 gap-4 sm:grid-cols-4 stagger-children"
+          className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 stagger-children px-2 sm:px-0"
         >
           <StatCard
             icon={<Flame className="h-5 w-5" />}

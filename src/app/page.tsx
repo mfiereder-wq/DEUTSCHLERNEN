@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,7 @@ import { DailyLearning } from '@/components/daily-learning';
 import { PronunciationPractice } from '@/components/pronunciation-practice';
 import { SyncManagerCard } from '@/components/sync-manager';
 import { PWAInfoCard } from '@/components/pwa-install';
+import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 
 // Mock user progress
 const MOCK_USER = {
@@ -20,28 +21,75 @@ const MOCK_USER = {
   wordsLearned: 0,
 };
 
-// Sample word for pronunciation practice
-const SAMPLE_WORD = {
-  id: 'sample-1',
-  german: 'Guten Morgen',
-  english: 'Good morning',
-  category: 'Alltag',
-  difficulty: 'A1' as const,
-  tags: ['greeting', 'morning'],
-  exampleSentence: 'Guten Morgen! Wie geht es dir?',
-};
+// Sample words for pronunciation practice
+const PRACTICE_WORDS: ExtendedVocabWord[] = [
+  {
+    id: 'practice-1',
+    german: 'Guten Morgen',
+    english: 'Good morning',
+    category: 'Alltag',
+    difficulty: 'A1',
+    tags: ['greeting', 'morning'],
+    exampleSentence: 'Guten Morgen! Wie geht es dir?',
+  },
+  {
+    id: 'practice-2',
+    german: 'Danke schön',
+    english: 'Thank you very much',
+    category: 'Alltag',
+    difficulty: 'A1',
+    tags: ['polite', 'thanks'],
+    exampleSentence: 'Danke schön für deine Hilfe!',
+  },
+  {
+    id: 'practice-3',
+    german: 'Entschuldigung',
+    english: 'Excuse me / Sorry',
+    category: 'Alltag',
+    difficulty: 'A1',
+    tags: ['polite', 'apology'],
+    exampleSentence: 'Entschuldigung, wie spät ist es?',
+  },
+  {
+    id: 'practice-4',
+    german: 'Auf Wiedersehen',
+    english: 'Goodbye',
+    category: 'Alltag',
+    difficulty: 'A1',
+    tags: ['farewell'],
+    exampleSentence: 'Auf Wiedersehen und bis bald!',
+  },
+  {
+    id: 'practice-5',
+    german: 'Bitte sehr',
+    english: 'You\'re welcome',
+    category: 'Alltag',
+    difficulty: 'A1',
+    tags: ['polite', 'response'],
+    exampleSentence: 'Bitte sehr, gern geschehen!',
+  },
+];
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('learn');
+  const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleNextPractice = () => {
+    setCurrentPracticeIndex((prev) => (prev + 1) % PRACTICE_WORDS.length);
+  };
+
+  const handlePrevPractice = () => {
+    setCurrentPracticeIndex((prev) => (prev - 1 + PRACTICE_WORDS.length) % PRACTICE_WORDS.length);
+  };
+
   if (!mounted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
       </div>
     );
@@ -49,22 +97,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background noise-texture">
-      {/* Header */}
+      {/* Header - Mobile optimized */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
+        <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
+          <div className="flex h-14 sm:h-16 items-center justify-between">
+            {/* Logo - smaller on mobile */}
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-2 sm:gap-3"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#C9A86C] to-[#D4A574]">
-                <BookOpen className="h-5 w-5 text-white" />
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-[#C9A86C] to-[#D4A574]">
+                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </div>
               <div>
-                <h1 className="font-display text-xl tracking-tight text-gradient-gold">
-                  DEUTSCHLERNEN
+                <h1 className="font-display text-lg sm:text-xl tracking-tight text-gradient-gold">
+                  <span className="hidden sm:inline">DEUTSCH</span>LERNEN
                 </h1>
               </div>
             </motion.div>
@@ -73,75 +121,107 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 sm:gap-2"
             >
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full">
+                <User className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </motion.div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      {/* Main Content - Full width on mobile */}
+      <main className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Tab Navigation */}
-          <div className="mb-6 flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3 rounded-xl bg-muted p-1">
-              <TabsTrigger 
-                value="learn" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                <GraduationCap className="h-4 w-4" />
-                <span className="hidden sm:inline">Lernen</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="pronunciation" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span className="hidden sm:inline">Aussprache</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="settings" 
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">Einstellungen</span>
-              </TabsTrigger>
-            </TabsList>
+          {/* Tab Navigation - Mobile optimized */}
+          <div className="sticky top-14 sm:top-16 z-40 border-b border-border bg-background/95 backdrop-blur-md">
+            <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+              <TabsList className="grid w-full grid-cols-3 rounded-none bg-transparent p-0 h-12">
+                <TabsTrigger 
+                  value="learn" 
+                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                >
+                  <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Lernen</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="pronunciation" 
+                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                >
+                  <BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Aussprache</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Übung</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="settings" 
+                  className="flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3"
+                >
+                  <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Einstell.</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
 
-          {/* Tab Content */}
-          <ScrollArea className="h-[calc(100vh-12rem)]">
+          {/* Tab Content - Full width on mobile */}
+          <div className="w-full">
             {/* Learn Tab */}
-            <TabsContent value="learn" className="mt-0">
+            <TabsContent value="learn" className="mt-0 w-full">
               <DailyLearning userLevel={MOCK_USER.level} />
             </TabsContent>
 
             {/* Pronunciation Tab */}
-            <TabsContent value="pronunciation" className="mt-0">
-              <div className="mx-auto max-w-2xl">
-                <PronunciationPractice word={SAMPLE_WORD} />
+            <TabsContent value="pronunciation" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <div className="mx-auto max-w-2xl space-y-4">
+                {/* Navigation for practice words */}
+                <div className="flex items-center justify-between gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePrevPractice}
+                    className="text-xs sm:text-sm"
+                  >
+                    ← Vorherige
+                  </Button>
+                  <span className="text-xs sm:text-sm text-muted-foreground">
+                    {currentPracticeIndex + 1} / {PRACTICE_WORDS.length}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNextPractice}
+                    className="text-xs sm:text-sm"
+                  >
+                    Nächste →
+                  </Button>
+                </div>
+                
+                <PronunciationPractice 
+                  word={PRACTICE_WORDS[currentPracticeIndex]} 
+                  onNext={handleNextPractice}
+                  hasNext={true}
+                />
               </div>
             </TabsContent>
 
             {/* Settings Tab */}
-            <TabsContent value="settings" className="mt-0">
-              <div className="grid gap-6 md:grid-cols-2">
+            <TabsContent value="settings" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <div className="mx-auto max-w-7xl grid gap-4 sm:gap-6 md:grid-cols-2">
                 <PWAInfoCard />
                 <SyncManagerCard />
               </div>
             </TabsContent>
-          </ScrollArea>
+          </div>
         </Tabs>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        <p>DEUTSCHLERNEN - Lerne Deutsch jeden Tag</p>
+      {/* Footer - Mobile optimized */}
+      <footer className="border-t border-border py-4 sm:py-6 text-center">
+        <p className="text-xs sm:text-sm text-muted-foreground px-4">
+          DEUTSCHLERNEN - Lerne Deutsch jeden Tag
+        </p>
       </footer>
     </div>
   );

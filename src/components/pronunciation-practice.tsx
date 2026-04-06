@@ -280,6 +280,15 @@ export function PronunciationPractice({ word, onComplete, onNext, hasNext = fals
                   {attempts > 1 && (
                     <p className="mt-1 text-xs text-green-600">
                       Nach {attempts} {attempts === 1 ? 'Versuch' : 'Versuchen'}
+                      {hasNext && onNext && (
+                        <Button
+                          size="sm"
+                          onClick={onNext}
+                          className="mt-4 bg-gradient-to-r from-[#C9A86C] to-[#D4A574] text-black hover:from-[#D4A574] hover:to-[#E5C58C]"
+                        >
+                          Nächste Aufgabe →
+                        </Button>
+                      )}
                     </p>
                   )}
                 </>
