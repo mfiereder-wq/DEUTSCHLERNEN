@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,14 +13,15 @@ import { SyncManagerCard } from '@/components/sync-manager';
 import { PWAInfoCard } from '@/components/pwa-install';
 import { SentenceCompletion } from '@/components/sentence-completion';
 import { QuizGame } from '@/components/quiz-game';
+import { LevelMap } from '@/components/level-map';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 
 // Mock user progress
 const MOCK_USER = {
   level: 1,
-  xp: 0,
-  streak: 0,
-  wordsLearned: 0,
+  xp: 250,
+  streak: 3,
+  wordsLearned: 15,
 };
 
 // Sample words for pronunciation practice
@@ -173,6 +174,13 @@ export default function Home() {
                   <span className="text-xs sm:text-sm font-medium">Quiz</span>
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="levels" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
+                >
+                  <Map className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Level</span>
+                </TabsTrigger>
+                <TabsTrigger 
                   value="settings" 
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
@@ -233,6 +241,11 @@ export default function Home() {
             {/* Quiz Tab */}
             <TabsContent value="quiz" className="mt-0 w-full px-3 sm:px-4 py-4">
               <QuizGame />
+            </TabsContent>
+
+            {/* Levels Tab */}
+            <TabsContent value="levels" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <LevelMap currentXP={MOCK_USER.xp} onSelectLevel={(level) => console.log('Selected level:', level)} />
             </TabsContent>
 
             {/* Settings Tab */}
