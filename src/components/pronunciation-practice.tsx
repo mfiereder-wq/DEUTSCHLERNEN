@@ -23,9 +23,11 @@ import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 interface PronunciationPracticeProps {
   word: ExtendedVocabWord;
   onComplete?: (success: boolean) => void;
+  onNext?: () => void;
+  hasNext?: boolean;
 }
 
-export function PronunciationPractice({ word, onComplete }: PronunciationPracticeProps) {
+export function PronunciationPractice({ word, onComplete, onNext, hasNext = false }: PronunciationPracticeProps) {
   const { 
     isPlaying, 
     isSupported: speechSupported, 
