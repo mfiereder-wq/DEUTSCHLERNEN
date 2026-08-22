@@ -1,0 +1,37 @@
+{
+  "name": "DEUTSCHLERNEN - Lerne Deutsch",
+  "short_name": "DEUTSCHLERNEN",
+  "description": "Interaktive Deutsch-Lern-App mit täglichen Wörtern, Quizzen und Gamification",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#fbbf24",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["education", "language"],
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tägliche Wörter",
+      "short_name": "Wörter",
+      "description": "Die heutigen neuen Wörter lernen",
+      "url": "/?tab=daily",
+      "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Quiz",
+      "short_name": "Quiz",
+      "description": "Ein schnelles Quiz starten",
+      "url": "/?tab=quiz",
+      "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}
