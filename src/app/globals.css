@@ -11,42 +11,43 @@
    Theme Variables - Tailwind v4 Syntax
    ============================================ */
 @theme {
-  /* Light theme colors */
-  --color-background: #F4F7F6;
-  --color-foreground: #102A43;
+  /* Light theme colors — use CSS variables for dark mode support */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   
-  --color-card: #FFFFFF;
-  --color-card-foreground: #102A43;
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #102A43;
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   
-  --color-primary: #F26B5E;
-  --color-primary-foreground: #FFFFFF;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   
-  --color-secondary: #DCEDEA;
-  --color-secondary-foreground: #102A43;
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   
-  --color-muted: #E6EFED;
-  --color-muted-foreground: #58727A;
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   
-  --color-accent: #168C8C;
-  --color-accent-foreground: #FFFFFF;
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   
   /* Sprachwerkstatt palette */
-  --color-destructive: #D64545;
-  --color-border: #C9DAD7;
-  --color-input: #C9DAD7;
-  --color-ring: #F26B5E;
-  --color-german-cream: #F4F7F6;
-  --color-german-ochre: #F26B5E;
-  --color-german-navy: #102A43;
-  --color-german-amber: #F2B84B;
-  --color-german-sage: #168C8C;
-  --color-german-rose: #F26B5E;
-  --color-german-charcoal: #183B56;
-  --color-german-paper: #FFFFFF;
-  --color-german-warm: #DCEDEA;
-  --color-german-gold: #F2B84B;
+  --color-german-cream: var(--german-cream);
+  --color-german-ochre: var(--german-ochre, #F26B5E);
+  --color-german-navy: var(--german-navy);
+  --color-german-amber: var(--german-amber, #F2B84B);
+  --color-german-sage: var(--german-sage, #168C8C);
+  --color-german-rose: var(--german-rose, #F26B5E);
+  --color-german-charcoal: var(--german-charcoal, #183B56);
+  --color-german-paper: var(--german-paper);
+  --color-german-warm: var(--german-warm);
+  --color-german-gold: var(--german-gold, #F2B84B);
   
   /* Border radius */
   --radius-sm: 0.375rem;
@@ -82,6 +83,12 @@
   --german-navy: #102A43;
   --german-paper: #FFFFFF;
   --german-warm: #DCEDEA;
+  --german-ochre: #F26B5E;
+  --german-amber: #F2B84B;
+  --german-sage: #168C8C;
+  --german-rose: #F26B5E;
+  --german-charcoal: #183B56;
+  --german-gold: #F2B84B;
 }
 
 /* Dark mode using standard CSS - works with class="dark" on html */
@@ -105,8 +112,15 @@
   --input: #2E5660;
   --ring: #FF7B6B;
   --german-cream: #0D1B2A;
+  --german-navy: #A9C1C2;
   --german-paper: #142B3D;
   --german-warm: #1F4350;
+  --german-ochre: #FF7B6B;
+  --german-amber: #F2B84B;
+  --german-sage: #3CB7B0;
+  --german-rose: #FF7B6B;
+  --german-charcoal: #233B50;
+  --german-gold: #D4A574;
 }
 
 /* ============================================
