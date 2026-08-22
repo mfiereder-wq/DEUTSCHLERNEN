@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, LogIn, AlertCircle, KeyRound } from 'lucide-react';
+import { Lock, LogIn, AlertCircle, KeyRound, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -130,7 +130,18 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               </form>
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-2 pt-0">
+            <CardFooter className="flex flex-col space-y-3 pt-0">
+              <div className="w-full border-t border-border pt-3">
+                <a
+                  href="https://www.tutti.ch/de/vi/zuerich/dienstleistungen/computer-handys/deutsch-lernen-ohne-abo-lern-app-mit-einmaligem-zugang/82550204"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-[#F26B5E] transition-colors"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  <span>Noch keinen Zugangscode? Jetzt auf tutti.ch erwerben</span>
+                </a>
+              </div>
               <p className="text-xs text-center text-muted-foreground">
                 Sicherer Zugang zur Deutschlern-App
               </p>
