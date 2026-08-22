@@ -15,65 +15,22 @@ import { QuizGame } from '@/components/quiz-game';
 import { LevelMap } from '@/components/level-map';
 import { UserProfile } from '@/components/user-profile';
 import { SRSPractice } from '@/components/srs-practice';
-import { ExtendedVocabWord } from '@/data/extended-vocabulary';
+import { ExtendedVocabWord, EXTENDED_VOCABULARY, shuffleArray } from '@/data/extended-vocabulary';
 import { useAuth } from '@/contexts/auth-context';
 import { LoginScreen } from '@/components/auth/login-screen';
 import { getProgress, PROGRESS_UPDATED_EVENT, UserProgress } from '@/lib/progress-store';
 import { getCurrentLevel } from '@/lib/level-system';
 
-// Sample words for pronunciation practice
-const PRACTICE_WORDS: ExtendedVocabWord[] = [
-  {
-    id: 'practice-1',
-    german: 'Guten Morgen',
-    english: 'Good morning',
-    category: 'Alltag',
-    difficulty: 'A1',
-    tags: ['greeting', 'morning'],
-    exampleSentence: 'Guten Morgen! Wie geht es dir?',
-  },
-  {
-    id: 'practice-2',
-    german: 'Danke schön',
-    english: 'Thank you very much',
-    category: 'Alltag',
-    difficulty: 'A1',
-    tags: ['polite', 'thanks'],
-    exampleSentence: 'Danke schön für deine Hilfe!',
-  },
-  {
-    id: 'practice-3',
-    german: 'Entschuldigung',
-    english: 'Excuse me / Sorry',
-    category: 'Alltag',
-    difficulty: 'A1',
-    tags: ['polite', 'apology'],
-    exampleSentence: 'Entschuldigung, wie spät ist es?',
-  },
-  {
-    id: 'practice-4',
-    german: 'Auf Wiedersehen',
-    english: 'Goodbye',
-    category: 'Alltag',
-    difficulty: 'A1',
-    tags: ['farewell'],
-    exampleSentence: 'Auf Wiedersehen und bis bald!',
-  },
-  {
-    id: 'practice-5',
-    german: 'Bitte sehr',
-    english: 'You\'re welcome',
-    category: 'Alltag',
-    difficulty: 'A1',
-    tags: ['polite', 'response'],
-    exampleSentence: 'Bitte sehr, gern geschehen!',
-  },
-];
+// Pronunciation practice: shuffled list of all vocabulary words
+function getShuffledPracticeWords(): ExtendedVocabWord[] {
+  return shuffleArray(EXTENDED_VOCABULARY);
+}
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+  const [practiceWords, setPracticeWords] = useState<ExtendedVocabWord[]>(() => getShuffledPracticeWords());
   const [progress, setProgress] = useState<UserProgress>(() => getProgress());
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
 
@@ -85,11 +42,18 @@ export default function Home() {
   }, []);
 
   const handleNextPractice = () => {
-    setCurrentPracticeIndex((prev) => (prev + 1) % PRACTICE_WORDS.length);
+    setCurrentPracticeIndex((prev) => {
+      if (prev + 1 >= practiceWords.length) {
+        // Re-shuffle when all words have been practiced
+        setPracticeWords(getShuffledPracticeWords());
+        return 0;
+      }
+      return prev + 1;
+    });
   };
 
   const handlePrevPractice = () => {
-    setCurrentPracticeIndex((prev) => (prev - 1 + PRACTICE_WORDS.length) % PRACTICE_WORDS.length);
+    setCurrentPracticeIndex((prev) => (prev - 1 + practiceWords.length) % practiceWords.length);
   };
 
   const handleLoginSuccess = () => {
@@ -262,14 +226,14 @@ export default function Home() {
                     ← Vorherige
                   </Button>
                   <span className="text-xs sm:text-sm text-muted-foreground">
-                    {currentPracticeIndex + 1} / {PRACTICE_WORDS.length}
+                    {currentPracticeIndex + 1} / {practiceWords.length}
                   </span>
                   <Button variant="outline" size="sm" onClick={handleNextPractice} className="text-xs sm:text-sm">
                     Nächste →
                   </Button>
                 </div>
                 <PronunciationPractice 
-                  word={PRACTICE_WORDS[currentPracticeIndex]} 
+                  word={practiceWords[currentPracticeIndex]} 
                   onNext={handleNextPractice}
                   hasNext={true}
                 />
