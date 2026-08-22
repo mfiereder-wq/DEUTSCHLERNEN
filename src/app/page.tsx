@@ -21,18 +21,37 @@ import { LoginScreen } from '@/components/auth/login-screen';
 import { getProgress, PROGRESS_UPDATED_EVENT, UserProgress } from '@/lib/progress-store';
 import { getCurrentLevel } from '@/lib/level-system';
 
-// Pronunciation practice: shuffled list of all vocabulary words
-function getShuffledPracticeWords(): ExtendedVocabWord[] {
-  return shuffleArray(EXTENDED_VOCABULARY);
+// Pronunciation practice: shuffled list filtered by user's current level
+function getPracticeDifficulty(userXp: number): string {
+  const diff = getCurrentLevel(userXp).difficulty;
+  return diff;
+}
+
+function getShuffledPracticeWords(userXp: number): ExtendedVocabWord[] {
+  const currentDiff = getPracticeDifficulty(userXp);
+  // Include current difficulty + one level below for variety
+  const allowed: Record<string, string[]> = {
+    'A1': ['A1'],
+    'A2': ['A1', 'A2'],
+    'B1': ['A2', 'B1'],
+    'B2': ['B1', 'B2'],
+  };
+  const difficulties = allowed[currentDiff] || [currentDiff];
+  let pool = EXTENDED_VOCABULARY.filter(w => difficulties.includes(w.difficulty));
+  // Fallback: if no words match (shouldn't happen), use all words
+  if (pool.length === 0) pool = EXTENDED_VOCABULARY;
+  return shuffleArray(pool);
 }
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-  const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
-  const [practiceWords, setPracticeWords] = useState<ExtendedVocabWord[]>(() => getShuffledPracticeWords());
   const [progress, setProgress] = useState<UserProgress>(() => getProgress());
+  const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+  const [practiceWords, setPracticeWords] = useState<ExtendedVocabWord[]>(() => getShuffledPracticeWords(getProgress().xp));
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
+
+  const userLevel = getCurrentLevel(progress.xp);
 
   useEffect(() => {
     setMounted(true);
@@ -41,11 +60,17 @@ export default function Home() {
     return () => window.removeEventListener(PROGRESS_UPDATED_EVENT, refreshProgress);
   }, []);
 
+  // Re-filter practice words when difficulty tier changes
+  useEffect(() => {
+    setPracticeWords(getShuffledPracticeWords(progress.xp));
+    setCurrentPracticeIndex(0);
+  }, [userLevel.difficulty]);
+
   const handleNextPractice = () => {
     setCurrentPracticeIndex((prev) => {
       if (prev + 1 >= practiceWords.length) {
         // Re-shuffle when all words have been practiced
-        setPracticeWords(getShuffledPracticeWords());
+        setPracticeWords(getShuffledPracticeWords(progress.xp));
         return 0;
       }
       return prev + 1;
@@ -215,7 +240,7 @@ export default function Home() {
 
             {/* Learn Tab */}
             <TabsContent value="learn" className="mt-0 w-full">
-              <DailyLearning userLevel={getCurrentLevel(progress.xp).id} />
+              <DailyLearning userLevel={userLevel.id} />
             </TabsContent>
 
             {/* Pronunciation Tab */}
