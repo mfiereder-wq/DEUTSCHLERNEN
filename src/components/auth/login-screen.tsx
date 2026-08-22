@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, LogIn, AlertCircle, KeyRound, HelpCircle } from 'lucide-react';
+import { Lock, LogIn, AlertCircle, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [accessCode, setAccessCode] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showHint, setShowHint] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -129,47 +128,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                   )}
                 </Button>
               </form>
-
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">
-                    Hilfe benötigt?
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                variant="ghost"
-                onClick={() => setShowHint(!showHint)}
-                className="w-full text-sm text-muted-foreground hover:text-foreground"
-              >
-                <HelpCircle className="mr-2 h-4 w-4" />
-                {showHint ? 'Hinweis ausblenden' : 'Hinweis anzeigen'}
-              </Button>
-
-              <AnimatePresence>
-                {showHint && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="p-3 rounded-lg bg-muted/50 border border-border text-sm text-muted-foreground space-y-2 overflow-hidden"
-                  >
-                    <p className="font-medium">Beispiel-Zugangscodes:</p>
-                    <ul className="list-disc list-inside space-y-1 font-mono text-xs">
-                      <li>DEUTSCH2024</li>
-                      <li>LEARN123</li>
-                      <li>ADMIN</li>
-                    </ul>
-                    <p className="pt-2 text-xs">
-                      Hinweis: Diese Codes sind für Demonstrationszwecke. In einer Produktionsumgebung würden Sie sichere, benutzerspezifische Codes verwenden.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-2 pt-0">

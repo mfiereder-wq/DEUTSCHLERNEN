@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-const VALID_ACCESS_CODES = ['DEUTSCH2024', 'LEARN123', 'ADMIN'];
+const VALID_ACCESS_CODES = ['DLRN-Q9A6-TOUB-JSTE'];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
