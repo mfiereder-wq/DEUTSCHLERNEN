@@ -107,7 +107,7 @@ export async function subscribeToPush(publicVapidKey: string): Promise<PushSubsc
 
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+      applicationServerKey: urlBase64ToUint8Array(publicVapidKey) as BufferSource,
     });
 
     console.log('[SW] Push subscription:', subscription);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map, UserCircle } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map, UserCircle, Repeat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -14,6 +14,7 @@ import { SentenceCompletion } from '@/components/sentence-completion';
 import { QuizGame } from '@/components/quiz-game';
 import { LevelMap } from '@/components/level-map';
 import { UserProfile } from '@/components/user-profile';
+import { SRSPractice } from '@/components/srs-practice';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
 
 // Sample words for pronunciation practice
@@ -157,6 +158,13 @@ export default function Home() {
                   <span className="text-xs sm:text-sm font-medium sm:hidden">Audio</span>
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="srs" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
+                >
+                  <Repeat className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium">Wiederholung</span>
+                </TabsTrigger>
+                <TabsTrigger 
                   value="sentences" 
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#C9A86C] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap"
                 >
@@ -220,6 +228,11 @@ export default function Home() {
                   hasNext={true}
                 />
               </div>
+            </TabsContent>
+
+            {/* SRS/Spaced Repetition Tab */}
+            <TabsContent value="srs" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <SRSPractice />
             </TabsContent>
 
             {/* Sentences Tab */}

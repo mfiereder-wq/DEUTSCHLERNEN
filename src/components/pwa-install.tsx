@@ -225,8 +225,8 @@ export function OnlineStatus() {
   );
 }
 
-// Offline mode card
-export function OfflineModeCard() {
+// Offline mode card - now accepts className prop
+export function OfflineModeCard({ className }: { className?: string }) {
   const { isOnline, mounted } = useOnlineStatus();
 
   if (!mounted || isOnline) return null;
@@ -235,7 +235,7 @@ export function OfflineModeCard() {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="rounded-xl border-2 border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30"
+      className={className || "rounded-xl border-2 border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30"}
     >
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900">

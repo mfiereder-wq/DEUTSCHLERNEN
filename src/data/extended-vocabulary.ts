@@ -8,7 +8,7 @@ export interface ExtendedVocabWord {
   german: string;
   english: string;
   category: string;
-  subcategory: string;
+  subcategory?: string;
   difficulty: DifficultyLevel;
   tags: string[];
   exampleSentence?: string;
