@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map, UserCircle, Repeat } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, User, Puzzle, Brain, Map, UserCircle, Repeat, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -16,6 +16,8 @@ import { LevelMap } from '@/components/level-map';
 import { UserProfile } from '@/components/user-profile';
 import { SRSPractice } from '@/components/srs-practice';
 import { ExtendedVocabWord } from '@/data/extended-vocabulary';
+import { useAuth } from '@/contexts/auth-context';
+import { LoginScreen } from '@/components/auth/login-screen';
 
 // Sample words for pronunciation practice
 const PRACTICE_WORDS: ExtendedVocabWord[] = [
@@ -70,6 +72,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+  const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -83,12 +86,33 @@ export default function Home() {
     setCurrentPracticeIndex((prev) => (prev - 1 + PRACTICE_WORDS.length) % PRACTICE_WORDS.length);
   };
 
-  if (!mounted) {
+  const handleLoginSuccess = () => {
+    // Login is handled by the AuthContext
+  };
+
+  // Show loading spinner during auth check
+  if (authLoading || !mounted) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#C9A86C] to-[#D4A574]">
+            <BookOpen className="h-8 w-8 text-white" />
+          </div>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Lade...</p>
+        </motion.div>
       </div>
     );
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
@@ -120,8 +144,14 @@ export default function Home() {
               className="flex items-center gap-1 sm:gap-2"
             >
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full">
-                <User className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 sm:h-10 sm:w-10 rounded-full"
+                onClick={logout}
+                title="Abmelden"
+              >
+                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </motion.div>
           </div>
