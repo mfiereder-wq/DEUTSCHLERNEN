@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, GraduationCap, Settings, Puzzle, Brain, Map, UserCircle, Repeat, LogOut, Sparkles } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, Puzzle, Brain, UserCircle, Repeat, LogOut, Sparkles, Search, BookMarked, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -12,12 +12,15 @@ import { SyncManagerCard } from '@/components/sync-manager';
 import { PWAInfoCard } from '@/components/pwa-install';
 import { SentenceCompletion } from '@/components/sentence-completion';
 import { QuizGame } from '@/components/quiz-game';
-import { LevelMap } from '@/components/level-map';
 import { UserProfile } from '@/components/user-profile';
 import { SRSPractice } from '@/components/srs-practice';
 import { ExtendedVocabWord, EXTENDED_VOCABULARY, shuffleArray } from '@/data/extended-vocabulary';
 import { useAuth } from '@/contexts/auth-context';
 import { LoginScreen } from '@/components/auth/login-screen';
+import { StatsDashboard } from '@/components/stats-dashboard';
+import { GrammarLessons } from '@/components/grammar-lessons';
+import { WordSearch } from '@/components/word-search';
+import { OnboardingTour } from '@/components/onboarding-tour';
 import { getProgress, PROGRESS_UPDATED_EVENT, UserProgress } from '@/lib/progress-store';
 import { getCurrentLevel } from '@/lib/level-system';
 
@@ -208,8 +211,25 @@ export default function Home() {
                   value="levels" 
                   className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#F26B5E] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap hover:text-[#F26B5E]"
                 >
-                  <Map className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-xs sm:text-sm font-medium">Level</span>
+                  <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Statistik</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Stats</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="grammar" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#F26B5E] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap hover:text-[#F26B5E]"
+                >
+                  <BookMarked className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Grammatik</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Gram.</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="search" 
+                  className="flex items-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-3 sm:px-4 data-[state=active]:border-[#F26B5E] data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 whitespace-nowrap hover:text-[#F26B5E]"
+                >
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Wörter</span>
+                  <span className="text-xs sm:text-sm font-medium sm:hidden">Wört.</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="settings" 
@@ -282,7 +302,17 @@ export default function Home() {
 
             {/* Levels Tab */}
             <TabsContent value="levels" className="mt-0 w-full px-3 sm:px-4 py-4">
-              <LevelMap currentXP={progress.xp} onSelectLevel={(level) => console.log('Selected:', level)} />
+              <div className="mx-auto max-w-7xl"><StatsDashboard /></div>
+            </TabsContent>
+
+            {/* Grammar Tab */}
+            <TabsContent value="grammar" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <div className="mx-auto max-w-2xl"><GrammarLessons /></div>
+            </TabsContent>
+
+            {/* Search Tab */}
+            <TabsContent value="search" className="mt-0 w-full px-3 sm:px-4 py-4">
+              <div className="mx-auto max-w-2xl"><WordSearch /></div>
             </TabsContent>
 
             {/* Settings Tab */}
@@ -302,6 +332,9 @@ export default function Home() {
           DEUTSCHLERNEN / Kleine Schritte. Sicheres Deutsch.
         </p>
       </footer>
+
+      {/* Onboarding Tour */}
+      <OnboardingTour />
     </div>
   );
 }
