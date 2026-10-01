@@ -202,7 +202,12 @@ export function QuizGame() {
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <ExerciseImage imageKey={currentQuestion.id} context={`${currentQuestion.category} Quiz`} alt="Quiz-Bild" className="h-36 sm:h-44" />
+        <ExerciseImage
+          imageKey={currentQuestion.id}
+          context={`${currentQuestion.question} ${currentQuestion.explanation} ${currentQuestion.category}`}
+          alt={`Bild zum Thema: ${currentQuestion.question}`}
+          className="h-36 sm:h-44"
+        />
         <div className="p-4 sm:p-6 bg-muted/50 rounded-xl">
           <AnimatePresence mode="wait">
             <motion.div key={currentQuestion.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>

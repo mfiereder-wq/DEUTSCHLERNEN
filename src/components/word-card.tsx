@@ -74,7 +74,7 @@ export function WordCard({
         </div>
 
         <ExerciseImage
-          context={`${word.category} ${word.german}`}
+          context={`${word.german} ${word.english} ${word.category} ${word.tags.join(' ')}`}
           alt={`Bild zum Wort ${word.german}`}
           className="h-12 w-12 shrink-0 rounded-lg"
         />
@@ -168,7 +168,7 @@ export function WordCard({
           )}
 
           <ExerciseImage
-            context={`${word.category} ${word.german}`}
+            context={`${word.german} ${word.english} ${word.category} ${word.tags.join(' ')}`}
             alt={`Bild zum Wort ${word.german}`}
             className="mb-5 h-32 w-full"
           />
@@ -279,8 +279,13 @@ export function WordCard({
 
           {/* Content */}
           <div className="flex h-full flex-col items-center justify-center text-center">
-            <h4 className="font-display text-2xl mb-2">{word.german}</h4>
-            <p className="text-sm text-muted-foreground mb-4">{word.english}</p>
+            <ExerciseImage
+              context={`${word.german} ${word.category} ${word.tags.join(' ')}`}
+              alt={`Bild zum Wort ${word.german}`}
+              className="mb-2 h-12 w-12 rounded-lg"
+            />
+            <h4 className="font-display text-2xl mb-1">{word.german}</h4>
+            <p className="text-sm text-muted-foreground mb-2">{word.english}</p>
             
             <div className="text-xs text-muted-foreground">
               Klicken zum Details
