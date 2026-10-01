@@ -79,36 +79,70 @@ const QUESTION_IMAGE_IDS: Record<string, string> = {
   q10: 'photo-1473093295043-cdd812d0e601',
 };
 
+// Specific vocabulary is matched before broad topic labels so a word like
+// "Buch" gets a book image even when its category is simply "Alltag".
 const WORD_IMAGE_RULES: Array<[string[], string]> = [
-  [['kaffee', 'café', 'frühstück'], 'photo-1495475776255-0f3a2c2f8c8a'],
-  [['pizza', 'essen', 'restaurant', 'mahlzeit'], 'photo-1504674900247-0877df9cc836'],
-  [['buch', 'lesen', 'bibliothek'], 'photo-1543002588-bfa74002ed7e'],
-  [['arzt', 'gesund', 'medizin', 'apotheke'], 'photo-1505751172876-fa1923c5c528'],
+  [['wecker', 'alarm clock', 'aufwachen', 'wake up', 'bett', 'bedroom'], 'photo-1505693416388-ac5ce068fe85'],
+  [['tisch', 'table', 'stuhl', 'chair'], 'photo-1493666438817-866a91353ca9'],
+  [['schlüssel', ' key', 'tasche', 'bag', 'portemonnaie', 'wallet', 'geldbörse'], 'photo-1512909006721-3d6018887383'],
+  [['zahnbürste', 'toothbrush', 'zahn', 'tooth', 'zahnarzt', 'dentist', 'spiegel', 'mirror'], 'photo-1505751172876-fa1923c5c528'],
+  [['kaffee', 'coffee', 'café', 'frühstück', 'croissant', 'brötchen'], 'photo-1495475776255-0f3a2c2f8c8a'],
+  [['pizza', 'mittagessen', 'abendessen', 'restaurant', 'mahlzeit', 'rezept', 'recipe', 'zutaten', 'ingredients', 'gemüse', 'vegetables', 'obst', 'fruit', 'fleisch', 'meat', 'fisch', 'fish', 'brot', 'bread', 'kuchen', 'cake', 'suppe', 'soup', 'salat', 'salad', 'nudeln', 'pasta', 'hungrig', 'hunger'], 'photo-1504674900247-0877df9cc836'],
+  [['wasser', 'saft', 'tee', 'milch', 'getränk', 'trinken'], 'photo-1548839140-29a749e1cf4d'],
+  [['buch', 'lesen', 'bibliothek', 'hausaufgaben', 'schule', 'lernen', 'sprache', 'grammatik', 'prüfung', 'studieren'], 'photo-1456513080510-7bf3a84b82f8'],
+  [['arzt', 'doctor', 'ärztin', 'physician', 'gesund', 'health', 'medizin', 'medicine', 'apotheke', 'pharmacy', 'krank', 'sick', 'krankenhaus', 'hospital', 'fieber', 'fever', 'husten', 'cough', 'schmerzen', 'pain', 'tabletten', 'pills'], 'photo-1505751172876-fa1923c5c528'],
   [['berlin'], 'photo-1560969184-10fe8719e047'],
-  [['deutschland'], 'photo-1467269204594-9661b134dd2b'],
-  [['zug', 'bahn', 'reisen', 'reise', 'koffer'], 'photo-1500534623283-312aade485b7'],
-  [['hotel'], 'photo-1566073771259-6a8506099945'],
-  [['schwimmen'], 'photo-1530549387789-4c1017266635'],
-  [['musik', 'konzert'], 'photo-1511379938547-c1f69419868d'],
+  [['deutschland', 'münchen'], 'photo-1467269204594-9661b134dd2b'],
+  [['flughafen', 'airport', 'flugzeug', 'airplane', 'boarding', 'reisepass', 'passport', 'koffer', 'suitcase', 'gepäck', 'luggage', 'rucksack', 'backpack', 'zug', 'train', 'bahn', 'bahnhof', 'bus', 'fahrkarte', 'ticket', 'taxi', 'fahrrad', 'bicycle', 'auto', 'car'], 'photo-1544620347-c4fd4a3d5957'],
+  [['urlaub', 'vacation', 'hike', 'wandern', 'wald', 'forest', 'berg', 'mountain', 'natur', 'nature', 'park', 'spaziergang', 'spazieren', 'walk'], 'photo-1500534623283-312aade485b7'],
+  [['hotel', 'unterkunft', 'accommodation', 'reservierung', 'reservation'], 'photo-1566073771259-6a8506099945'],
+  [['schwimmen', 'schwimmbad', 'pool'], 'photo-1530549387789-4c1017266635'],
+  [['musik', 'music', 'konzert', 'concert', 'gitarre', 'guitar', 'singen', 'sing', 'lied', 'song', 'tanzen', 'dance'], 'photo-1511379938547-c1f69419868d'],
   [['tennis'], 'photo-1554068865-24cecd4e34b8'],
-  [['fußball'], 'photo-1579952363873-27f3bade9f55'],
-  [['regen', 'wetter'], 'photo-1519692933481-e162a57d6721'],
-  [['arbeit', 'büro'], 'photo-1497366754035-f200968a6e72'],
-  [['freizeit', 'hobby'], 'photo-1529156069898-49953e39b3ac'],
-  [['lernen', 'sprache', 'grammatik'], 'photo-1456513080510-7bf3a84b82f8'],
+  [['fußball', 'fußballspiel', 'soccer', 'football'], 'photo-1579952363873-27f3bade9f55'],
+  [['regen', 'wetter', 'wolke', 'schnee', 'wind', 'gewitter', 'sonne', 'sonnig', 'winter', 'sommer'], 'photo-1519692933481-e162a57d6721'],
+  [['besprechung', 'kollege', 'kollegin', 'präsentation', 'lebenslauf', 'bewerbung', 'gehalt', 'meeting'], 'photo-1497366754035-f200968a6e72'],
+  [['handy', 'cell phone', 'mobile phone', 'telefon', 'phone', 'nachricht', 'message', 'e-mail', 'email', 'computer', 'bildschirm', 'screen', 'tastatur', 'keyboard'], 'photo-1516321318423-f06f85e504b3'],
+  [['hose', 'hemd', 'kleid', 'jacke', 'mantel', 'schuh', 'pullover', 't-shirt', 'kleidung', 'anzug', 'anziehen', 'get dressed', 'socke', 'sock', 'schal', 'scarf', 'handschuh', 'glove', 'rock', 'skirt', 'shirt'], 'photo-1483985988355-763728e1935b'],
+  [['familie', 'family', 'freund', 'friend', 'freundin', 'freunde', 'schwester', 'sister', 'bruder', 'brother', 'eltern', 'parents', 'geburtstag', 'birthday', 'party', 'feier', 'geschenk', 'gift'], 'photo-1529156069898-49953e39b3ac'],
+  [['kino', 'cinema', 'film', 'movie', 'theater'], 'photo-1489599849927-2ee91cede3ba'],
+  [['spiegel', 'mirror', 'briefkasten', 'mailbox', 'treppe', 'stairs', 'fahrstuhl', 'elevator', 'staubsauger', 'vacuum cleaner', 'wäsche', 'laundry'], 'photo-1484154218962-a197022b5858'],
+  [['kunst', 'malerei', 'museum', 'fotografie'], 'photo-1561214115-f2f134cc4912'],
+  [['wandern', 'hike', 'wald', 'forest', 'berg', 'mountain', 'natur', 'nature', 'park', 'spaziergang', 'spazieren', 'walk'], 'photo-1500534623283-312aade485b7'],
+  [['wohnung', 'zimmer', 'küche', 'kitchen', 'badezimmer', 'bathroom', 'schlafzimmer', 'bedroom', 'wohnzimmer', 'living room', 'möbel', 'furniture', 'tisch', 'table', 'stuhl', 'chair', 'bett', 'bed', 'schrank', 'closet', 'fenster', 'window', 'tür', 'door', 'haus', 'house', 'wohnen', 'home', 'aufräumen', 'tidy up', 'staubsaugen', 'vacuum', 'wäsche', 'laundry', 'bügeln', 'iron', 'einkaufen', 'shop', 'geschäft', 'store'], 'photo-1484154218962-a197022b5858'],
+];
+
+const TOPIC_IMAGE_RULES: Array<[string[], string]> = [
+  [['begrüßung', 'freundschaft', 'familie', 'kommunikation'], 'photo-1529156069898-49953e39b3ac'],
+  [['essen', 'bestellung', 'restaurant'], 'photo-1504674900247-0877df9cc836'],
+  [['wohnen', 'alltag', 'besitz'], 'photo-1484154218962-a197022b5858'],
+  [['reisen', 'transport', 'herkunft'], 'photo-1500534623283-312aade485b7'],
+  [['wetter'], 'photo-1519692933481-e162a57d6721'],
+  [['sport'], 'photo-1579952363873-27f3bade9f55'],
+  [['freizeit'], 'photo-1529156069898-49953e39b3ac'],
+  [['gesundheit', 'berufe'], 'photo-1505751172876-fa1923c5c528'],
+  [['arbeit', 'beruf'], 'photo-1497366754035-f200968a6e72'],
+  [['grammatik', 'artikel', 'verben', 'modalverben', 'negation', 'adjektive', 'perfekt', 'vergangenheit', 'konjunktiv', 'fragen', 'wortschatz', 'sprache'], 'photo-1456513080510-7bf3a84b82f8'],
 ];
 
 export function getStockImage(imageKey = '', context = ''): string {
-  if (QUESTION_IMAGE_IDS[imageKey]) return imageUrl(QUESTION_IMAGE_IDS[imageKey]);
+  const normalized = context.toLocaleLowerCase('de');
 
-  const normalized = context.toLowerCase();
   for (const [keywords, photoId] of WORD_IMAGE_RULES) {
     if (keywords.some(keyword => normalized.includes(keyword))) {
       return imageUrl(photoId);
     }
   }
 
-  return imageUrl('photo-1484154218962-a197022b5858');
+  if (QUESTION_IMAGE_IDS[imageKey]) return imageUrl(QUESTION_IMAGE_IDS[imageKey]);
+
+  for (const [topics, photoId] of TOPIC_IMAGE_RULES) {
+    if (topics.some(topic => normalized.includes(topic))) {
+      return imageUrl(photoId);
+    }
+  }
+
+  return imageUrl('photo-1456513080510-7bf3a84b82f8');
 }
 
 export function ExerciseImage({
@@ -124,17 +158,20 @@ export function ExerciseImage({
   className?: string;
   imageClassName?: string;
 }) {
-  const [hasError, setHasError] = useState(false);
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const src = getStockImage(imageKey, context);
+  const fallbackSrc = imageUrl('photo-1456513080510-7bf3a84b82f8');
+  const imageSrc = failedImage === src ? fallbackSrc : src;
 
-  if (hasError) return null;
+  if (failedImage === fallbackSrc) return null;
 
   return (
     <div className={cn('relative overflow-hidden rounded-xl bg-muted', className)}>
       <img
-        src={getStockImage(imageKey, context)}
+        src={imageSrc}
         alt={alt}
         loading="lazy"
-        onError={() => setHasError(true)}
+        onError={() => setFailedImage(imageSrc)}
         className={cn('h-full w-full object-cover', imageClassName)}
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
